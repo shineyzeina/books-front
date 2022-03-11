@@ -19,7 +19,7 @@ const putUser = (email,firstName,lastName, phone,id) => {
 };
 
 const putPassword = (newPassword) => {
-  return axios(API_URL + "/users/", {method: 'put', headers: authHeader(),data: { password: newPassword}});
+  return axios(API_URL + "/user/current", {method: 'put', headers: authHeader(),data: { password: newPassword}});
 };
 
 const getUserById = (id) => {

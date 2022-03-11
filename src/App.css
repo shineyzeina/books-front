@@ -197,6 +197,9 @@ iframe {
 .authorFormBackground{
 	background-image: url(images/authorform.jpg);
 }
+.passwordFormBackground{
+	background-image: url(images/passwordform.jpg);
+}
 
 
 .wrap-form {
@@ -613,3 +616,5 @@ input.input100 {
 .text-light { text-decoration:underline; color:white;}
 .searchContainer { vertical-align:top;}
 .alert{ margin-top:15px;}
+.red-heart{color:red !important}
+.gery-heart{color:grey !important}

@@ -5,24 +5,24 @@ const API_URL = process.env.REACT_APP_SERVER_API ;
 
 
 const getBooksList = (searchKey) => {
-  return axios.get(API_URL + "/books?searchKey="+searchKey, { headers: authHeader() });
+  return axios.get(API_URL + "/books?keyword="+searchKey, { headers: authHeader() });
 };
 
 const deleteBook = (id) => {
-  return axios(API_URL + "/books/" + id, {method: 'delete', headers: authHeader()});
+  return axios(API_URL + "/book/" + id, {method: 'delete', headers: authHeader()});
 };
 
-const putBook = (id,firstName,lastName, address, phone,phone2,email, description, pic, medicalHistory, medication,payments) => {
-  return axios(API_URL + "/books/" + id, {method: 'put', headers: authHeader(),data: { completeName:firstName +" " + lastName, firstName:firstName,lastName:lastName, address:address, phone:phone, phone2:phone2,email:email, description:description, pic:pic, medicalHistory:medicalHistory, medication:medication, payments:payments}});
+const putBook = (_id, ISBN, name, author) => {
+  return axios(API_URL + "/book/" + _id, {method: 'put', headers: authHeader(),data: {ISBN, name, author}});
 };
 
-const postBook = (firstName,lastName, address, phone,phone2,email, description, pic, medicalHistory, medication,payments) => {
-  return axios(API_URL + "/books", {method: 'post', headers: authHeader(),data: {completeName:firstName +" " + lastName, firstName:firstName,lastName:lastName, address:address, phone:phone, phone2:phone2,email:email, description:description, pic:pic, medicalHistory:medicalHistory, medication:medication, payments:payments}});
+const favoriteBook = (_id,action) =>{
+  return axios(API_URL + "/book/favorite/" + _id, {method: 'put', headers: authHeader(),data: {action}});
+}
+const postBook = (ISBN, name, author) => {
+  return axios(API_URL + "/book", {method: 'post', headers: authHeader(),data: {ISBN, name, author}});
 };
 
-const createPDF = (id) => {
-  return axios(API_URL + "/books/pdf/" + id, {method: 'post', headers: authHeader()});
-};
 
 
 const getBookById = (id) => {
@@ -51,6 +51,6 @@ export default {
   getBookById,
   uploadPic,
   loadPic,
-  createPDF,
+  favoriteBook,
   loadPdfUrl
 };

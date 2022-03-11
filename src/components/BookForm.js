@@ -2,13 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
-import { isEmail } from "validator";
 import BookService from "../services/book.service";
 import EventBus from "../common/EventBus";
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import PhotoCamera from '@material-ui/icons/PhotoCamera';
-import defaultProfile from "../images/profile.png";
+import { getAuthorLists } from "./AuthorsList"
+
 
 const required = (value) => {
 	if (!value) {
@@ -19,10 +16,6 @@ const required = (value) => {
 		);
 	}
 };
-
-
-
-
 
 const BookForm = (props) => {
 	const form = useRef();
@@ -40,7 +33,10 @@ const BookForm = (props) => {
 
 	useEffect(() => {
 		async function onReady() {
+
+			setAuthorsList(await getAuthorLists())
 			getBookInfo();
+
 		}
 
 		onReady()
@@ -132,13 +128,13 @@ const BookForm = (props) => {
 
 
 	return (
-		
+
 		<div className="wrap-form">
 			<div className="form-title bookFormBackground" >
-					<span className="form-title-1">
-						Book Form
-					</span>
-				</div>
+				<span className="form-title-1">
+					Book Form
+				</span>
+			</div>
 			<Form className="form validate-form" onSubmit={handleSavebook} ref={form}>
 				<div className="wrap-input100 validate-input m-b-18" data-validate="ISBN is required">
 					<span className="label-input100">ISBN</span>
@@ -166,16 +162,19 @@ const BookForm = (props) => {
 					<span className="focus-input100"></span>
 				</div>
 
-				<div className="wrap-input100 validate-input m-b-18" data-validate="Password is required">
+				<div className="wrap-input100 validate-input m-b-18" data-validate="Author is required">
 					<span className="label-input100">Author</span>
-					<Input
+					<select
 						type="text"
 						className="input100"
 						name="author"
 						value={author}
 						onChange={e => setAuthor(e.target.value)}
 						validations={[required]}
-					/>
+					>
+						<option value="" key="0"></option>
+						{authorsList && authorsList.map((a, index) => <option key={index} value={a.id}>{a.first_name} {a.last_name}</option>)}
+					</select>
 					<span className="focus-input100"></span>
 				</div>
 
@@ -189,26 +188,26 @@ const BookForm = (props) => {
 					</button>
 
 				</div>
-		
+
 
 				{
-		message && (
-			<div className="form-group">
-				<div
-					className={
-						successful ? "alert alert-success" : "alert alert-danger"
-					}
-					role="alert"
-				>
-					{message}
-				</div>
-			</div>
-		)
-	}
-	<CheckButton style={{ display: "none" }} ref={checkBtn} />
+					message && (
+						<div className="form-group">
+							<div
+								className={
+									successful ? "alert alert-success" : "alert alert-danger"
+								}
+								role="alert"
+							>
+								{message}
+							</div>
+						</div>
+					)
+				}
+				<CheckButton style={{ display: "none" }} ref={checkBtn} />
 			</Form >
 		</div>
-		
+
 	);
 };
 

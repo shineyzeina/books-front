@@ -81,7 +81,7 @@ const Users = () => {
 					<th>Email</th>
 					<th>Phone</th>
 					<th>Type</th>
-					<th>Action</th>
+					{/*<th>Action</th> */}
 				</tr>
 			</thead>
 			<tbody>
@@ -93,8 +93,8 @@ const Users = () => {
 						<td>{u.lastName}</td>
 						<td>{u.email}</td>
 						<td>{u.phone}</td>
-						<td>{u.user_type}</td>
-						<td><a href={"/user/" + u.id}  className="text-dark ">Edit</a>&nbsp;&nbsp;&nbsp;<a href="#"  className="text-dark" onClick={(e) => deleteUser(e, u.id)} >Delete</a></td>
+						<td>{u.type}</td>
+						{/*<td><a href={"/user/" + u.id}  className="text-dark ">Edit</a>&nbsp;&nbsp;&nbsp;<a href="#"  className="text-dark" onClick={(e) => deleteUser(e, u.id)} >Delete</a></td>*/}
 					</tr> 
 					 
 				 ))}

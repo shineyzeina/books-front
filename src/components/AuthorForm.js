@@ -2,13 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
-import { isEmail } from "validator";
 import AuthorService from "../services/author.service";
 import EventBus from "../common/EventBus";
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import PhotoCamera from '@material-ui/icons/PhotoCamera';
-import defaultProfile from "../images/profile.png";
+
 
 const required = (value) => {
 	if (!value) {
