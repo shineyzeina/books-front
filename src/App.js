@@ -95,7 +95,7 @@ const App = () => {
         ) : (
           <div className="navbar-nav ml-auto">
             <li className="nav-item">
-              <Link to={"/SignUpForm"} className="nav-link text-dark mx-0">
+              <Link to={"/register"} className="nav-link text-dark mx-0">
                 SignUp
               </Link>
             </li>
@@ -119,7 +119,7 @@ const App = () => {
         <Switch>
           <Route exact path={["/", "/home"]} component={Home} />
           <Route exact path="/login" component={Login} />
-          <Route exact path="/SignUpForm" component={SignUpForm} />
+          <Route exact path="/register" component={SignUpForm} />
           <Route exact path="/profile" component={Profile} />
           <Route path="/book/new" component={BookForm} />
           <Route path="/book/edit/:id" component={BookForm} />

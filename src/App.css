@@ -618,3 +618,9 @@ input.input100 {
 .alert{ margin-top:15px;}
 .red-heart{color:red !important}
 .gery-heart{color:grey !important}
+
+.react-tel-input .form-control{
+  width: 100% !important;
+  border-top: none !important;
+  border-right: none !important;
+}
