@@ -6,6 +6,7 @@ import "./util.css";
 import logo from './images/logo.png';
 import AuthService from "./services/auth.service";
 
+import SignUpForm from "./components/SignupForm"
 import Login from "./components/Login";
 import Home from "./components/Home";
 import Profile from "./components/Profile";
@@ -94,10 +95,16 @@ const App = () => {
         ) : (
           <div className="navbar-nav ml-auto">
             <li className="nav-item">
+              <Link to={"/register"} className="nav-link text-dark mx-0">
+                SignUp
+              </Link>
+            </li>
+            <li className="nav-item">
               <Link to={"/login"} className="nav-link text-dark mx-0">
                 Login
               </Link>
             </li>
+            
 
 
           </div>
@@ -112,6 +119,7 @@ const App = () => {
         <Switch>
           <Route exact path={["/", "/home"]} component={Home} />
           <Route exact path="/login" component={Login} />
+          <Route exact path="/register" component={SignUpForm} />
           <Route exact path="/profile" component={Profile} />
           <Route path="/book/new" component={BookForm} />
           <Route path="/book/edit/:id" component={BookForm} />

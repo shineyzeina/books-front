@@ -17,7 +17,7 @@ const required = (value) => {
 	}
 };
 
-const BookForm = (props) => {
+	const BookForm = (props) => {
 	const form = useRef();
 	const checkBtn = useRef();
 
