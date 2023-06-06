@@ -4,10 +4,12 @@ import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import BookService from "../services/book.service";
 import EventBus from "../common/EventBus";
-import { getAuthorLists } from "./AuthorsList"
-
-
-const required = (value) => {
+import { getAuthorLists } from "./AuthorsList";
+import CategoryDropDown from "./DropDown";
+// import AuthorsDropDown from "./AuthorsDropDown";
+import DropDown from "./DropDown";
+import { bookCategories } from "./CategoryList";
+export const required = (value) => {
 	if (!value) {
 		return (
 			<div className="alert alert-danger" role="alert">
@@ -23,6 +25,7 @@ const required = (value) => {
 
 	const [ISBN, setISBN] = useState("");
 	const [name, setName] = useState("");
+	const [category, setCategory] = useState("");
 	const [author, setAuthor] = useState("");
 	const [authorsList, setAuthorsList] = useState([]);
 	const [successful, setSuccessful] = useState(false);
@@ -43,6 +46,14 @@ const required = (value) => {
 
 	}, []);
 
+	const handleAuthor = (e) => {
+		console.log("Current author: ", e)
+	}
+	const handleCategory = (e) => {
+		console.log("Current category: ", e);
+		setCategory(e);
+	}
+
 	const getBookInfo = () => {
 		if (bookId) {
 			BookService.getBookById(bookId).then(
@@ -50,7 +61,9 @@ const required = (value) => {
 					let b = response.data;
 					setISBN(b.ISBN);
 					setName(b.name);
+					setCategory(b.category);
 					setAuthor(b.author);
+					
 
 
 				},
@@ -81,7 +94,7 @@ const required = (value) => {
 		setLoading(true);
 		if (checkBtn.current.context._errors.length === 0) {
 			if (bookId) {
-				BookService.putBook(bookId, ISBN, name, author).then(
+				BookService.putBook(bookId, ISBN, name, author, category).then(
 					(response) => {
 						setMessage("book Updated.");
 						setSuccessful(true);
@@ -102,7 +115,7 @@ const required = (value) => {
 			}
 			else {
 
-				BookService.postBook(ISBN, name, author).then(
+				BookService.postBook(ISBN, name, author, category).then(
 					(response) => {
 						setMessage("book Saved.");
 						setSuccessful(true);
@@ -162,6 +175,22 @@ const required = (value) => {
 					<span className="focus-input100"></span>
 				</div>
 
+				<div className="wrap-input100 validate-input m-b-18" data-validate="Name is required">
+					<span className="label-input100">Category</span>
+					<CategoryDropDown
+						value = {category}
+						onChange = {e => setCategory(e.target.value)}
+					/>
+					{/* <DropDown
+						value = {category}
+						onChange = {e => handleCategory(e.target.value)}
+						validations = {[required]}
+						options = {bookCategories}
+					/> */}
+
+					<span className="focus-input100"></span>
+				</div>
+
 				<div className="wrap-input100 validate-input m-b-18" data-validate="Author is required">
 					<span className="label-input100">Author</span>
 					<select
@@ -175,6 +204,11 @@ const required = (value) => {
 						<option value="" key="0"></option>
 						{authorsList && authorsList.map((a, index) => <option key={index} value={a.id}>{a.first_name} {a.last_name}</option>)}
 					</select>
+					{/* <AuthorsDropDown
+						value = {author}
+						onChange = {e => handleAuthor(e.target.value)}
+						validations = {[required]}
+					/> */}
 					<span className="focus-input100"></span>
 				</div>
 

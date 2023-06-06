@@ -161,6 +161,7 @@ const Books = () => {
 							<tr>
 								<th>ISBN</th>
 								<th>Name</th>
+								<th>Category</th>
 								<th>Author</th>
 								<th>Added By</th>
 								<th>Action</th>
@@ -173,6 +174,7 @@ const Books = () => {
 
 									<td valign="top">{b.ISBN} </td>
 									<td valign="top">{b.name}</td>
+									<td valign="top>">{b.category}</td>
 									<td valign="top">{b.author ? b.author.first_name + " " + b.author.last_name : ""}</td>
 									<td valign="top">{b.createdBy ? b.createdBy.firstName + " " + b.createdBy.lastName : ""}</td>
 									<td valign="top"><a href={"/book/edit/" + b.id} className="text-dark ">Edit</a>&nbsp;&nbsp;&nbsp;<a href="#" className="text-dark" onClick={(e) => deleteBook(e, b.id)} >Delete</a>

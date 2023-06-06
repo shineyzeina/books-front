@@ -110,10 +110,7 @@ const App = () => {
           </div>
         )}
       </nav>
-      <div>
-
-
-      </div>
+      
 
       <div className="container">
         <Switch>

@@ -12,15 +12,15 @@ const deleteBook = (id) => {
   return axios(API_URL + "/book/" + id, {method: 'delete', headers: authHeader()});
 };
 
-const putBook = (_id, ISBN, name, author) => {
-  return axios(API_URL + "/book/" + _id, {method: 'put', headers: authHeader(),data: {ISBN, name, author}});
+const putBook = (_id, ISBN, name, author, category) => {
+  return axios(API_URL + "/book/" + _id, {method: 'put', headers: authHeader(),data: {ISBN, name, author, category}});
 };
 
 const favoriteBook = (_id,action) =>{
   return axios(API_URL + "/book/favorite/" + _id, {method: 'put', headers: authHeader(),data: {action}});
 }
-const postBook = (ISBN, name, author) => {
-  return axios(API_URL + "/book", {method: 'post', headers: authHeader(),data: {ISBN, name, author}});
+const postBook = (ISBN, name, author, category) => {
+  return axios(API_URL + "/book", {method: 'post', headers: authHeader(),data: {ISBN, name, author, category}});
 };
 
 
