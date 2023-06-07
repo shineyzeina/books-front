@@ -16,6 +16,7 @@ import BookForm from "./components/BookForm";
 import AuthorForm from "./components/AuthorForm";
 import Authors from "./components/Authors";
 import PasswordForm from "./components/PasswordForm";
+import AuthorView from "./components/AuthorView";
 
 
 // import AuthVerify from "./common/AuthVerify";
@@ -121,6 +122,7 @@ const App = () => {
           <Route path="/book/new" component={BookForm} />
           <Route path="/book/edit/:id" component={BookForm} />
           <Route path="/author/new" component={AuthorForm} />
+          <Route path="/author/view/:authorId" component={AuthorView} />
           <Route path="/author/edit/:id" component={AuthorForm} />
 
           <Route path="/users" component={Users} />

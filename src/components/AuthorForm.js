@@ -32,6 +32,7 @@ const AuthorForm = (props) => {
 	const [successful, setSuccessful] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [message, setMessage] = useState("");
+	const [address, setAddress] = useState({})
 	const authorId = props.match.params.id;
 
 
@@ -53,6 +54,7 @@ const AuthorForm = (props) => {
 					setLastName(a.last_name);
 					setAge(a.age);
 					setNationality(a.nationality);
+					setAddress(a.address);
 
 
 				},
@@ -83,7 +85,7 @@ const AuthorForm = (props) => {
 		setLoading(true);
 		if (checkBtn.current.context._errors.length === 0) {
 			if (authorId) {
-				AuthorService.putAuthor(authorId, firstName, lastName, age, nationality).then(
+				AuthorService.putAuthor(authorId, firstName, lastName, age, nationality, address).then(
 					(response) => {
 						setMessage("Author Updated.");
 						setSuccessful(true);
@@ -104,7 +106,7 @@ const AuthorForm = (props) => {
 			}
 			else {
 
-				AuthorService.postAuthor(firstName, lastName, age, nationality).then(
+				AuthorService.postAuthor(firstName, lastName, age, nationality, address).then(
 					(response) => {
 						setMessage("Author Saved.");
 						setSuccessful(true);
@@ -128,6 +130,15 @@ const AuthorForm = (props) => {
 		setLoading(false);
 	};
 
+	const handleSaveAddress = (field, value) => {
+		setAddress(prevAddress => ({
+			...prevAddress,
+			[field]: value
+		  }));
+		console.log("Address field saved:", address.field);
+		console.log("Address saved", address)
+	}
+
 
 	return (
 
@@ -140,7 +151,7 @@ const AuthorForm = (props) => {
 			<Form className="form validate-form" onSubmit={handleSaveAuthor} ref={form}>
 
 
-				<div className="wrap-input100 validate-input m-b-18" data-validate="Name is required">
+				<div className="wrap-input100 validate-input m-b-18" data-validate="First name is required">
 					<span className="label-input100">First Name</span>
 					<Input
 						type="text"
@@ -153,7 +164,7 @@ const AuthorForm = (props) => {
 					<span className="focus-input100"></span>
 				</div>
 
-				<div className="wrap-input100 validate-input m-b-18" data-validate="Password is required">
+				<div className="wrap-input100 validate-input m-b-18" data-validate="Last name is required">
 					<span className="label-input100">Last Name</span>
 					<Input
 						type="text"
@@ -166,7 +177,7 @@ const AuthorForm = (props) => {
 					<span className="focus-input100"></span>
 				</div>
 
-				<div className="wrap-input100 validate-input m-b-18" data-validate="Password is required">
+				<div className="wrap-input100 validate-input m-b-18" data-validate="Age is required">
 					<span className="label-input100">Age</span>
 					<Input
 						type="text"
@@ -179,7 +190,7 @@ const AuthorForm = (props) => {
 					<span className="focus-input100"></span>
 				</div>
 
-				<div className="wrap-input100 validate-input m-b-18" data-validate="Password is required">
+				<div className="wrap-input100 validate-input m-b-18" data-validate="Nationality is required">
 					<span className="label-input100">Nationality</span>
 					<CountriesDropDown 
 						value = {nationality}
@@ -187,6 +198,64 @@ const AuthorForm = (props) => {
 					/>
 					<span className="focus-input100"></span>
 				</div>
+
+				<div style={{ padding: '30px' }}>
+  					<h4>Address</h4>
+  					<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridColumnGap: '100px' }}>
+    					<div className="wrap-input100 validate-input m-b-18" data-validate="Password is required">
+      						<span className="label-input100">Country</span>
+      						<Input
+        						type="text"
+        						className="input100"
+        						name="age"
+        						value={address.country}
+        						onChange={e => handleSaveAddress("country", e.target.value)}
+        						validations={[required]}
+      						/>
+      						<span className="focus-input100"></span>
+    					</div>
+
+    					<div className="wrap-input100 validate-input m-b-18" data-validate="Password is required">
+      						<span className="label-input100">City</span>
+      						<Input
+       							type="text"
+        						className="input100"
+        						name="age"
+        						value={address.city}
+        						onChange={e => handleSaveAddress("city", e.target.value)}
+        						validations={[required]}
+      						/>
+      						<span className="focus-input100"></span>
+    					</div>
+
+    					<div className="wrap-input100 validate-input m-b-18" data-validate="Password is required">
+      						<span className="label-input100">Street</span>
+							<Input
+        						type="text"
+        						className="input100"
+        						name="age"
+        						value={address.street}
+        						onChange={e => handleSaveAddress("street", e.target.value)}
+        						validations={[required]}
+      						/>
+      						<span className="focus-input100"></span>
+    					</div>
+
+    					<div className="wrap-input100 validate-input m-b-18" data-validate="Password is required">
+      						<span className="label-input100">Building</span>
+      						<Input
+        						type="text"
+        						className="input100"
+        						name="age"
+        						value={address.building}
+        						onChange={e => handleSaveAddress("building", e.target.value)}
+        						validations={[required]}
+      						/>
+      						<span className="focus-input100"></span>
+    					</div>
+  				</div>
+			</div>
+
 
 
 				<div className="container-form-btn">

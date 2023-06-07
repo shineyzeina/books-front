@@ -6,15 +6,20 @@ const Dropdown = ({ value, options, onChange }) => {
     return null;
   }
 
+  console.log("Options", options)
+
   return (
     <select className="input100" value={value} onChange={onChange}>
       <option value="" disabled hidden>
         Select an option
       </option>
-      {options.map((option, index) => (
-        <option key={index} value={option.value}>
-          {option.label}
-        </option>
+      {options.map((option) => (
+        <option
+        key={option.id || option.value}
+        value={option.id || option.value}
+      >
+        {option.label || option.value}
+      </option>
       ))}
     </select>
   );

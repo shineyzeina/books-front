@@ -1,6 +1,6 @@
 import React from "react";
 import Dropdown from "./DropDown";
-import { bookCategories } from './CategoryList'
+import { bookCategories } from './label/en/CategoryList'
 
 const Category = ({ value, onChange, label }) => {
   return (
@@ -11,8 +11,8 @@ const Category = ({ value, onChange, label }) => {
         value={value}
         onChange={onChange}
         options={bookCategories.map(category => ({
-          value: category,
-          label: category
+          value: category.label,
+          label: category.label
               }))
             }/>
     	  </div>

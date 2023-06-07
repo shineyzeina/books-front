@@ -12,12 +12,12 @@ const deleteAuthor = (id) => {
   return axios(API_URL + "/author/" + id, {method: 'delete', headers: authHeader()});
 };
 
-const putAuthor = (id,firstName,lastName,age, nationality) => {
-  return axios(API_URL + "/author/" + id, {method: 'put', headers: authHeader(),data: { first_name:firstName, last_name:lastName, age:age, nationality:nationality}});
+const putAuthor = (id,firstName,lastName,age, nationality, address) => {
+  return axios(API_URL + "/author/" + id, {method: 'put', headers: authHeader(),data: { first_name:firstName, last_name:lastName, age:age, nationality:nationality, address:address}});
 };
 
-const postAuthor = (firstName,lastName,age, nationality) => {
-  return axios(API_URL + "/author", {method: 'post', headers: authHeader(),data: {  first_name:firstName, last_name:lastName, age:age,nationality:nationality}});
+const postAuthor = (firstName,lastName,age, nationality, address) => {
+  return axios(API_URL + "/author", {method: 'post', headers: authHeader(),data: {  first_name:firstName, last_name:lastName, age:age,nationality:nationality, address:address}});
 };
 
 
