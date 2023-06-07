@@ -1,36 +1,23 @@
 import React from "react";
 
-const DropDown = ({value, onChange, options}) => {
-  
+const Dropdown = ({ value, options, onChange }) => {
   if (!Array.isArray(options)) {
-    console.error("Invalid options provided to Dropdown");
+    console.error("Invalid options provided to DropdownList");
     return null;
-  
   }
+
   return (
-    
-      <select 
-      type="text"
-      className="input100"
-      name="drop-down" 
-      value={value} 
-      onChange = {onChange}
-      >
-        <option value="" disabled hidden>
-          Select an option
+    <select className="input100" value={value} onChange={onChange}>
+      <option value="" disabled hidden>
+        Select an option
+      </option>
+      {options.map((option, index) => (
+        <option key={index} value={option.value}>
+          {option.label}
         </option>
-
-        {options.map((option, index) => (
-          <option key={index} value={option}>
-            {option}
-          </option>
-        ))}
-
-      </select>
-    
+      ))}
+    </select>
   );
 };
 
-export default DropDown;
-
-
+export default Dropdown;

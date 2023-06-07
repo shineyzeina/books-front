@@ -1,35 +1,38 @@
-// import DropDown from "./DropDown";
-// import { useEffect, useState } from "react";
-// import { getAuthorLists } from "./AuthorsList";
+import DropDown from "./DropDown";
+import { useEffect, useState } from "react";
+import { getAuthorLists } from "./AuthorsList";
 
-// const testAuthors = [
-//     'Fifi Abdo', 
-//     'Myriam Klink',
-//     'Adolf hitler',
-//     'Che Gevara'
-// ]
+const AuthorsDropDown = ({ value, onChange, label }) => {
+    const [authorsList, setAuthorsList] = useState(['Initial State']);
 
-// const AuthorsDropDown = ({ value, onChange }) => {
-//     const [authorsList, setAuthorsList] = useState(['Initial State']);
+    useEffect(() => {
+		async function onReady() {
+            const authors = await getAuthorLists();
+            setAuthorsList(authors);
+        }
 
-//     useEffect(() => {
-// 		async function onReady() {
-//             const full_list = await getAuthorLists();
-//             console.log(full_list);
-//             const authorNames = full_list.map(author => `${author.first_name} ${author.last_name}`);
-//             console.log(authorsList);
-// 			setAuthorsList(full_list);
-//         }
-// 		onReady()
+        
+		onReady()
 
-// 	}, []);
-//     console.log("Authors List", authorsList); 
-//     return <DropDown value={value} onChange={onChange} options = {
-//                                         authorsList
-//                                     //  authorsList.map(author => `${author.first_name} ${author.last_name}`)
-                                    
-//     } />;
-//   };
+	}, []);
+    console.log("Authors List", authorsList); 
+
+
+    return  (
+        <div className="wrap-input100 validate-input m-b-18" style={{ display: 'flex', alignItems: 'center' }}>
+            <label className="label-input100" style={{ marginRight: '10px' }}>{label}</label>
+					<div style={{ flex: 1 }}>
+                        <DropDown value={value} onChange={onChange} options = {
+                                authorsList.map( (author) => ({
+                                    value: author.id,
+                                    label: `${author.first_name} ${author.last_name}` 
+                                }))} />
+                                
+               </div>                 
+        </div>
+    )
+  
+}
   
 
-// export default AuthorsDropDown;
+export default AuthorsDropDown;

@@ -52,7 +52,7 @@ const Books = () => {
 	const favoriteBook = async (event, id,action) => {
 		var question = "Remove from your favorites?";
 		var favorite = false;
-		if (action == "add") {
+		if (action === "add") {
 			question = "Add to your favorites?";
 			favorite = true;
 		}

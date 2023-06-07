@@ -103,6 +103,8 @@ const Authors = () => {
 						<thead>
 							<tr>
 								<th>Name</th>
+								<th>Age</th>
+								<th>Nationality</th>
 								<th>Created By</th>
 								<th>Action</th>
 							</tr>
@@ -113,6 +115,8 @@ const Authors = () => {
 								<tr>
 
 									<td valign="top">{a.first_name} {a.last_name}</td>
+									<td valign="top">{a.age}</td>
+									<td valign="top">{a.nationality}</td>
 									<td valign="top">{a.createdBy ? a.createdBy.firstName + " " + a.createdBy.lastName : ""}</td>
 									<td valign="top"><a href={"/author/edit/" + a.id} className="text-dark ">Edit</a>&nbsp;&nbsp;&nbsp;<a href="#" className="text-dark" onClick={(e) => deleteAuthor(e, a.id)} >Delete</a>
 									</td>

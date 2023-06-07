@@ -4,6 +4,7 @@ import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import AuthorService from "../services/author.service";
 import EventBus from "../common/EventBus";
+import CountriesDropDown from "./CountriesDropDown";
 
 
 const required = (value) => {
@@ -26,6 +27,8 @@ const AuthorForm = (props) => {
 
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
+	const [age, setAge] = useState();
+	const [nationality, setNationality] = useState("")
 	const [successful, setSuccessful] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [message, setMessage] = useState("");
@@ -48,6 +51,8 @@ const AuthorForm = (props) => {
 					let a = response.data;
 					setFirstName(a.first_name);
 					setLastName(a.last_name);
+					setAge(a.age);
+					setNationality(a.nationality);
 
 
 				},
@@ -78,7 +83,7 @@ const AuthorForm = (props) => {
 		setLoading(true);
 		if (checkBtn.current.context._errors.length === 0) {
 			if (authorId) {
-				AuthorService.putAuthor(authorId, firstName, lastName).then(
+				AuthorService.putAuthor(authorId, firstName, lastName, age, nationality).then(
 					(response) => {
 						setMessage("Author Updated.");
 						setSuccessful(true);
@@ -99,7 +104,7 @@ const AuthorForm = (props) => {
 			}
 			else {
 
-				AuthorService.postAuthor(firstName, lastName).then(
+				AuthorService.postAuthor(firstName, lastName, age, nationality).then(
 					(response) => {
 						setMessage("Author Saved.");
 						setSuccessful(true);
@@ -161,6 +166,28 @@ const AuthorForm = (props) => {
 					<span className="focus-input100"></span>
 				</div>
 
+				<div className="wrap-input100 validate-input m-b-18" data-validate="Password is required">
+					<span className="label-input100">Age</span>
+					<Input
+						type="text"
+						className="input100"
+						name="age"
+						value={age}
+						onChange={e => setAge(e.target.value)}
+						validations={[required]}
+					/>
+					<span className="focus-input100"></span>
+				</div>
+
+				<div className="wrap-input100 validate-input m-b-18" data-validate="Password is required">
+					<span className="label-input100">Nationality</span>
+					<CountriesDropDown 
+						value = {nationality}
+						onChange={e => setNationality(e.target.value)}
+					/>
+					<span className="focus-input100"></span>
+				</div>
+
 
 				<div className="container-form-btn">
 					<button className="form-btn" disabled={loading}>
@@ -171,6 +198,9 @@ const AuthorForm = (props) => {
 					</button>
 
 				</div>
+				
+
+				
 
 
 				{

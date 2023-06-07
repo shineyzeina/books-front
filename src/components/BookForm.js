@@ -4,12 +4,12 @@ import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import BookService from "../services/book.service";
 import EventBus from "../common/EventBus";
-import { getAuthorLists } from "./AuthorsList";
-import CategoryDropDown from "./DropDown";
-// import AuthorsDropDown from "./AuthorsDropDown";
-import DropDown from "./DropDown";
-import { bookCategories } from "./CategoryList";
-export const required = (value) => {
+import CategoryDropDown from "./CategoryDropDown";
+import AuthorDropdown from './AuthorsDropDown';
+import { getAuthorLists } from "./AuthorsList"
+
+
+const required = (value) => {
 	if (!value) {
 		return (
 			<div className="alert alert-danger" role="alert">
@@ -25,8 +25,8 @@ export const required = (value) => {
 
 	const [ISBN, setISBN] = useState("");
 	const [name, setName] = useState("");
-	const [category, setCategory] = useState("");
 	const [author, setAuthor] = useState("");
+	const [category, setCategory] = useState("");
 	const [authorsList, setAuthorsList] = useState([]);
 	const [successful, setSuccessful] = useState(false);
 	const [loading, setLoading] = useState(false);
@@ -38,6 +38,7 @@ export const required = (value) => {
 		async function onReady() {
 
 			setAuthorsList(await getAuthorLists())
+			console.log("Author format ", authorsList)
 			getBookInfo();
 
 		}
@@ -46,14 +47,6 @@ export const required = (value) => {
 
 	}, []);
 
-	const handleAuthor = (e) => {
-		console.log("Current author: ", e)
-	}
-	const handleCategory = (e) => {
-		console.log("Current category: ", e);
-		setCategory(e);
-	}
-
 	const getBookInfo = () => {
 		if (bookId) {
 			BookService.getBookById(bookId).then(
@@ -61,9 +54,8 @@ export const required = (value) => {
 					let b = response.data;
 					setISBN(b.ISBN);
 					setName(b.name);
-					setCategory(b.category);
 					setAuthor(b.author);
-					
+					setCategory(b.category);
 
 
 				},
@@ -175,42 +167,22 @@ export const required = (value) => {
 					<span className="focus-input100"></span>
 				</div>
 
-				<div className="wrap-input100 validate-input m-b-18" data-validate="Name is required">
-					<span className="label-input100">Category</span>
-					<CategoryDropDown
+				
+
+				<CategoryDropDown
 						value = {category}
 						onChange = {e => setCategory(e.target.value)}
-					/>
-					{/* <DropDown
-						value = {category}
-						onChange = {e => handleCategory(e.target.value)}
-						validations = {[required]}
-						options = {bookCategories}
-					/> */}
+						label="Category"/>
+			
 
-					<span className="focus-input100"></span>
-				</div>
 
-				<div className="wrap-input100 validate-input m-b-18" data-validate="Author is required">
-					<span className="label-input100">Author</span>
-					<select
-						type="text"
-						className="input100"
-						name="author"
+			
+				<AuthorDropdown
 						value={author}
 						onChange={e => setAuthor(e.target.value)}
-						validations={[required]}
-					>
-						<option value="" key="0"></option>
-						{authorsList && authorsList.map((a, index) => <option key={index} value={a.id}>{a.first_name} {a.last_name}</option>)}
-					</select>
-					{/* <AuthorsDropDown
-						value = {author}
-						onChange = {e => handleAuthor(e.target.value)}
-						validations = {[required]}
-					/> */}
-					<span className="focus-input100"></span>
-				</div>
+						label="Author"/>
+
+
 
 
 				<div className="container-form-btn">
