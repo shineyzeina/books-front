@@ -27,3 +27,27 @@ export const getAuthorLists = async (keyword) => {
   return res;
 }
 
+export const getAuthorById = async (authorId) => {
+  let res = await AuthorService.getAuthorById(authorId).then(
+    (response) => {
+      return response.data;
+    },
+    (error) => {
+      const _content =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      alert(_content);
+
+      if (error.response && error.response.status === 401) {
+        EventBus.dispatch("logout");
+
+      }
+    }
+  );
+  return res;
+}
+

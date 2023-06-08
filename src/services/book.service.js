@@ -4,9 +4,25 @@ import authHeader from "./auth-header";
 const API_URL = process.env.REACT_APP_SERVER_API ;
 
 
-const getBooksList = (searchKey) => {
-  return axios.get(API_URL + "/books?keyword="+searchKey, { headers: authHeader() });
+// const getBooksList = (searchKey, authorId) => {
+//   let url = API_URL + "/books?keyword=" + searchKey + "&authorId=" + authorId
+//   return axios.get(url, { headers: authHeader() });
+// };
+
+const getBooksList = (searchKey, authorId, booksPerPage) => {
+  let url = API_URL + "/books?keyword=" + searchKey
+  if (authorId){
+    url += "&authorId=" + authorId;
+  }
+ 
+
+  if (booksPerPage) {
+    url += "&booksPerPage=" + booksPerPage;
+  }
+
+  return axios.get(url, { headers: authHeader() });
 };
+
 
 const deleteBook = (id) => {
   return axios(API_URL + "/book/" + id, {method: 'delete', headers: authHeader()});

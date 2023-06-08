@@ -14,12 +14,9 @@ const Dropdown = ({ value, options, onChange }) => {
         Select an option
       </option>
       {options.map((option) => (
-        <option
-        key={option.id || option.value}
-        value={option.id || option.value}
-      >
-        {option.label || option.value}
-      </option>
+        <option key={option.id || option.value} value={option.id || option.value}>
+          {option.label || option.value}
+        </option>
       ))}
     </select>
   );

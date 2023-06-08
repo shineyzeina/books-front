@@ -4,7 +4,7 @@ import authHeader from "./auth-header";
 const API_URL = process.env.REACT_APP_SERVER_API ;
 
 
-const getAuthorsList = (searchKey) => {
+const getAuthorsList = (searchKey, authorId) => {
   return axios.get(API_URL + "/authors?keyword="+searchKey, { headers: authHeader() });
 };
 
