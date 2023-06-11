@@ -28,11 +28,13 @@ const AuthorForm = (props) => {
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
 	const [age, setAge] = useState();
-	const [nationality, setNationality] = useState("")
+	const [nationality, setNationality] = useState("");
 	const [successful, setSuccessful] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [message, setMessage] = useState("");
-	const [address, setAddress] = useState({})
+	const [address, setAddress] = useState({});
+	const [picture, setPicture] = useState(null)
+	const [pictureUrl, setPictureUrl] = useState("");
 	const authorId = props.match.params.id;
 
 
@@ -45,6 +47,7 @@ const AuthorForm = (props) => {
 
 	}, []);
 
+
 	const getAuthorInfo = () => {
 		if (authorId) {
 			AuthorService.getAuthorById(authorId).then(
@@ -54,7 +57,8 @@ const AuthorForm = (props) => {
 					setLastName(a.last_name);
 					setAge(a.age);
 					setNationality(a.nationality);
-					setAddress(a.address);
+					setAddress(a.address || {});
+					setPictureUrl(a.pictureUrl);
 
 
 				},
@@ -75,7 +79,7 @@ const AuthorForm = (props) => {
 			);
 		}
 	}
-	const handleSaveAuthor = (e) => {
+	const handleSaveAuthor = async (e) => {
 		e.preventDefault();
 
 		setMessage("");
@@ -83,10 +87,36 @@ const AuthorForm = (props) => {
 
 		form.current.validateAll();
 		setLoading(true);
+
 		if (checkBtn.current.context._errors.length === 0) {
+			
+			try {
+				let pic_url  = null;
+				if (picture) {
+					const formData = new FormData();
+					formData.append("picture", picture);
+					await AuthorService.uploadPicture(formData)
+					.then((response) => {
+						pic_url = response.data.url;
+						setPictureUrl(pic_url);
+						console.log("Image URL ", pic_url)
+						// Perform actions with the imageUrl (e.g., save to the database)
+					  })
+					  .catch((error) => {
+						console.error("Error uploading picture:", error);
+					  });
+					
+				  }
+	
+
 			if (authorId) {
-				AuthorService.putAuthor(authorId, firstName, lastName, age, nationality, address).then(
+				AuthorService.putAuthor(authorId, firstName, lastName, age, nationality, address, pic_url).then(
 					(response) => {
+						
+						console.log(firstName, " here")
+						console.log(lastName, " here")
+						console.log(address, " here")
+						console.log(pic_url, "here")
 						setMessage("Author Updated.");
 						setSuccessful(true);
 						props.history.push('/authors');
@@ -106,8 +136,9 @@ const AuthorForm = (props) => {
 			}
 			else {
 
-				AuthorService.postAuthor(firstName, lastName, age, nationality, address).then(
+				AuthorService.postAuthor(firstName, lastName, age, nationality, address, pic_url).then(
 					(response) => {
+						console.log(pictureUrl, " hgere")
 						setMessage("Author Saved.");
 						setSuccessful(true);
 						props.history.push('/authors');
@@ -125,6 +156,17 @@ const AuthorForm = (props) => {
 					}
 				);
 			}
+		}  catch (error) {
+			const resMessage =
+			  (error.response &&
+				error.response.data &&
+				error.response.data.message) ||
+			  error.message ||
+			  error.toString();
+	
+			setMessage(resMessage);
+			setSuccessful(false);
+		  }
 
 		}
 		setLoading(false);
@@ -135,9 +177,14 @@ const AuthorForm = (props) => {
 			...prevAddress,
 			[field]: value
 		  }));
-		console.log("Address field saved:", address.field);
-		console.log("Address saved", address)
 	}
+
+	const handlePictureChange = (e) => {
+		setPicture(e);
+		}
+	
+	
+	  
 
 
 	return (
@@ -255,6 +302,13 @@ const AuthorForm = (props) => {
     					</div>
   				</div>
 			</div>
+
+			<div className="wrap-input100 validate-input m-b-18">
+           		<span className="label-input100">Image</span>
+            	<input type="file" onChange={e => handlePictureChange(e.target.files[0])} />
+            	<span className="focus-input100"></span>
+          	</div>
+          	
 
 
 

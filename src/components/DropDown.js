@@ -6,7 +6,7 @@ const Dropdown = ({ value, options, onChange }) => {
     return null;
   }
 
-  console.log("Options", options)
+  
 
   return (
     <select className="input100" value={value} onChange={onChange}>
