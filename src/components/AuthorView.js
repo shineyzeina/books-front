@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import BookService from "../services/book.service";
 import EventBus from "../common/EventBus";
 import { getAuthorById } from './AuthorsList';
+import {getPicture} from '../services/author.service';
 
 const AuthorView = () => {
   const { authorId } = useParams();
@@ -14,26 +15,47 @@ const AuthorView = () => {
   const [visibleBooksCount, setVisibleBooksCount] = useState(10);
   const [visibleBooksLimit, setVisibleBooksLimit] = useState(10);
   const [relativePath, setRelativePath] = useState("");
+  const [picUrl, setPicUrl] = useState("");
 
   useEffect(() => {
     searchAuthor(authorId);
+   
   }, []);
 
   const searchAuthor = async (author_id) => {
     setCurrentAuthor(await getAuthorById(author_id));
     
+
+    
   }
 
   useEffect(() => {
     if (currentAuthor) {
-      console.log("Current Author: ", currentAuthor)
-      const filePath = currentAuthor.pictureUrl;
-      const baseFolder = "D:\\Web Development\\aspire\\books-backend";
-      const relative_path = filePath.replace(baseFolder, "");
-      const test_path = "..\\..\\..\\books-backend" + relative_path
-      setRelativePath(test_path)
+      // console.log("Current Author: ", currentAuthor)
+      // const fullUrl = currentAuthor.pictureUrl;
+      // console.log("Full url", fullUrl)
+      // const relativeUrl = fullUrl.replace("D:\\Web Development\\aspire\\books-backend", "");
+      // console.log("Rel url", relativeUrl);
+      console.log("Current Author image URL ", currentAuthor.pictureUrl)
+      AuthorService.getPicture(currentAuthor.pictureUrl)
+      .then((response) => {
+        console.log("Test");
+        console.log(response.data);
+        const imgUrl = URL.createObjectURL(response.data);
+        console.log("Here is the image url being created: ", imgUrl)
+        setPicUrl(imgUrl);
+      })
+      .catch((error) => {
+        console.error("Error in searchAuthor: ", error);
+      });
+      // const filePath = currentAuthor.pictureUrl;
+      // const baseFolder = "D:\\Web Development\\aspire\\books-backend";
+      // const relative_path = filePath.replace(baseFolder, "");
+      // const test_path = "..\\..\\..\\books-backend" + relative_path
+      // setRelativePath(relative_path)
 
-      console.log(relative_path);
+      // console.log(relative_path);
+
 
       searchBooks(currentAuthor.id);
     }
@@ -100,7 +122,7 @@ const AuthorView = () => {
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
       <h1 style={{ paddingBottom: '60px', paddingTop: '20px' }}>{currentAuthor.first_name} {currentAuthor.last_name}</h1>
       {currentAuthor.pictureUrl ? (
-        <img src={relativePath} alt={`${currentAuthor.first_name} ${currentAuthor.last_name}`} style={{ width: '200px', height: '200px', objectFit: 'cover', borderRadius: '50%', marginBottom: '20px' }} />
+        <img src={picUrl} alt={`${currentAuthor.first_name} ${currentAuthor.last_name}`} style={{ width: '200px', height: '200px', objectFit: 'cover', borderRadius: '50%', marginBottom: '20px' }} />
       ) : (
         <div>No profile picture available</div>
       )}

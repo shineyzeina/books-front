@@ -97,7 +97,7 @@ const AuthorForm = (props) => {
 					formData.append("picture", picture);
 					await AuthorService.uploadPicture(formData)
 					.then((response) => {
-						pic_url = response.data.url;
+						pic_url = "/" + response.data.url;
 						setPictureUrl(pic_url);
 						console.log("Image URL ", pic_url)
 						// Perform actions with the imageUrl (e.g., save to the database)

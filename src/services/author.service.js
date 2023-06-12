@@ -31,6 +31,10 @@ const uploadPicture = (formData) => {
   return axios.post(API_URL + "/author/upload-picture", formData, { headers: authHeader() });
 };
 
+const getPicture = (pictureUrl) => {
+  return axios.get(API_URL + pictureUrl, { headers: authHeader(), responseType: 'blob' })
+} 
+
 
 
 export default {
@@ -39,6 +43,7 @@ export default {
   deleteAuthor,
   getAuthorsList,
   getAuthorById,
-  uploadPicture
+  uploadPicture,
+  getPicture
   
 };

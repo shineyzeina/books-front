@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Switch, Route, Link, Redirect } from "react-router-dom";
+import { Switch, Route, Link, } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import "./util.css";
@@ -70,7 +70,7 @@ const App = () => {
                 </Link>
               </li>
 
-              {currentUser.type == "admin" ? <li className="nav-item">
+              {currentUser.type === "admin" ? <li className="nav-item">
                 <Link to={"/users"} className="nav-link text-dark mx-0">
                   Users
                 </Link>
