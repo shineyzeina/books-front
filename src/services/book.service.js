@@ -4,8 +4,16 @@ import authHeader from "./auth-header";
 const API_URL = process.env.REACT_APP_SERVER_API ;
 
 
-const getBooksList = (searchKey) => {
-  return axios.get(API_URL + "/books?keyword="+searchKey, { headers: authHeader() });
+const getBooksList = (searchKey, authorId) => {
+  let url = API_URL + "/books?keyword="+searchKey;
+  if (authorId){
+    url += "&authorId="+ authorId;
+  }
+
+  console.log("Search Key:", searchKey);
+  console.log("Author ID:", authorId);
+  console.log("API URL:", url);
+  return axios.get(url, { headers: authHeader() });
 };
 
 const deleteBook = (id) => {

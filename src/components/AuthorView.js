@@ -3,7 +3,7 @@ import { getAuthorLists } from "./AuthorsList";
 import { useParams } from "react-router-dom";
 import BookService from "../services/book.service";
 import EventBus from "../common/EventBus";
-import { getAuthorById } from './AuthorsList';
+import AuthorService from '../services/author.service'
 
 const AuthorView = () => {
   const { authorId } = useParams();
@@ -13,25 +13,33 @@ const AuthorView = () => {
   const [displayedBooks, setDisplayedBooks] = useState([]);
   const [visibleBooksCount, setVisibleBooksCount] = useState(10);
   const [visibleBooksLimit, setVisibleBooksLimit] = useState(10);
+  const [article, setArticle] = useState("");
 
   useEffect(() => {
     searchAuthor(authorId);
   }, []);
 
   const searchAuthor = async (author_id) => {
-    setCurrentAuthor(await getAuthorById(author_id));
+    const author = await AuthorService.getAuthorById(author_id);
+    setCurrentAuthor(author.data);
   }
 
   useEffect(() => {
     if (currentAuthor) {
+      console.log("Current Author", currentAuthor)
+      const firstLetter = currentAuthor.nationality.charAt(0).toLowerCase();
+      const article = ["a", "e", "i", "o", "u"].includes(firstLetter) ? "an" : "a";
+      setArticle(article);
       searchBooks(currentAuthor.id);
     }
   }, [currentAuthor]);
 
-  const searchBooks = (author_id) => {
-    BookService.getBooksList("", author_id).then(
+  const searchBooks = (authorId) => {
+    console.log("Author id", authorId)
+    BookService.getBooksList("", authorId).then(
       (response) => {
         if (response) {
+          console.log("Books: ", response.data)
           setBooks(response.data);
           setDisplayedBooks(response.data.slice(0, visibleBooksCount));
         }
@@ -86,8 +94,8 @@ const AuthorView = () => {
     return <div>Loading...</div>;
   }
 
-  const firstLetter = currentAuthor.nationality.charAt(0).toLowerCase();
-  const article = ["a", "e", "i", "o", "u"].includes(firstLetter) ? "an" : "a";
+
+  
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>

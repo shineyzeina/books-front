@@ -12,12 +12,12 @@ const deleteAuthor = (id) => {
   return axios(API_URL + "/author/" + id, {method: 'delete', headers: authHeader()});
 };
 
-const putAuthor = (id,firstName,lastName,age, nationality, address, pictureUrl) => {
-  return axios(API_URL + "/author/" + id, {method: 'put', headers: authHeader(),data: { first_name:firstName, last_name:lastName, age:age, nationality:nationality, address:address, pictureUrl:pictureUrl}});
+const putAuthor = (id,firstName,lastName,age, nationality, address) => {
+  return axios(API_URL + "/author/" + id, {method: 'put', headers: authHeader(),data: { first_name:firstName, last_name:lastName, age:age, nationality:nationality, address:address}});
 };
 
-const postAuthor = (firstName,lastName,age, nationality, address, pictureUrl) => {
-  return axios(API_URL + "/author", {method: 'post', headers: authHeader(),data: {  first_name:firstName, last_name:lastName, age:age,nationality:nationality, address:address, pictureUrl:pictureUrl}});
+const postAuthor = (firstName,lastName,age, nationality, address) => {
+  return axios(API_URL + "/author", {method: 'post', headers: authHeader(),data: {  first_name:firstName, last_name:lastName, age:age,nationality:nationality, address:address}});
 };
 
 
@@ -26,14 +26,14 @@ const getAuthorById = (id) => {
   return axios.get(API_URL + "/author/" + id, { headers: authHeader() });
 };
 
-const uploadPicture = (formData) => {
+// const uploadPicture = (formData) => {
 
-  return axios.post(API_URL + "/author/upload-picture", formData, { headers: authHeader() });
-};
+//   return axios.post(API_URL + "/author/upload-picture", formData, { headers: authHeader() });
+// };
 
-const getPicture = (pictureUrl) => {
-  return axios.get(API_URL + pictureUrl, { headers: authHeader(), responseType: 'blob' })
-} 
+// const getPicture = (pictureUrl) => {
+//   return axios.get(API_URL + pictureUrl, { headers: authHeader(), responseType: 'blob' })
+// } 
 
 
 
@@ -43,7 +43,7 @@ export default {
   deleteAuthor,
   getAuthorsList,
   getAuthorById,
-  uploadPicture,
-  getPicture
+  // uploadPicture,
+  // getPicture
   
 };

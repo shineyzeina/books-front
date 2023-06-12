@@ -58,7 +58,7 @@ const AuthorForm = (props) => {
 					setAge(a.age);
 					setNationality(a.nationality);
 					setAddress(a.address || {});
-					setPictureUrl(a.pictureUrl);
+					// setPictureUrl(a.pictureUrl);
 
 
 				},
@@ -91,32 +91,32 @@ const AuthorForm = (props) => {
 		if (checkBtn.current.context._errors.length === 0) {
 			
 			try {
-				let pic_url  = null;
-				if (picture) {
-					const formData = new FormData();
-					formData.append("picture", picture);
-					await AuthorService.uploadPicture(formData)
-					.then((response) => {
-						pic_url = "/" + response.data.url;
-						setPictureUrl(pic_url);
-						console.log("Image URL ", pic_url)
-						// Perform actions with the imageUrl (e.g., save to the database)
-					  })
-					  .catch((error) => {
-						console.error("Error uploading picture:", error);
-					  });
+				// let pic_url  = null;
+				// if (picture) {
+				// 	const formData = new FormData();
+				// 	formData.append("picture", picture);
+				// 	await AuthorService.uploadPicture(formData)
+				// 	.then((response) => {
+				// 		pic_url = "/" + response.data.url;
+				// 		setPictureUrl(pic_url);
+				// 		console.log("Image URL ", pic_url)
+				// 		// Perform actions with the imageUrl (e.g., save to the database)
+				// 	  })
+				// 	  .catch((error) => {
+				// 		console.error("Error uploading picture:", error);
+				// 	  });
 					
-				  }
+				//   }
 	
 
 			if (authorId) {
-				AuthorService.putAuthor(authorId, firstName, lastName, age, nationality, address, pic_url).then(
+				AuthorService.putAuthor(authorId, firstName, lastName, age, nationality, address).then(
 					(response) => {
 						
 						console.log(firstName, " here")
 						console.log(lastName, " here")
 						console.log(address, " here")
-						console.log(pic_url, "here")
+						// console.log(pic_url, "here")
 						setMessage("Author Updated.");
 						setSuccessful(true);
 						props.history.push('/authors');
@@ -136,7 +136,7 @@ const AuthorForm = (props) => {
 			}
 			else {
 
-				AuthorService.postAuthor(firstName, lastName, age, nationality, address, pic_url).then(
+				AuthorService.postAuthor(firstName, lastName, age, nationality, address).then(
 					(response) => {
 						console.log(pictureUrl, " hgere")
 						setMessage("Author Saved.");
