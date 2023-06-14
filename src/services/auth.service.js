@@ -7,10 +7,10 @@ const register = (username, email, password,firstName,lastName, phone, dob) => {
     username,
     email,
     password,
-	firstName,
-	lastName,
-	phone,
-	dob
+	  firstName,
+	  lastName,
+	  phone,
+	  dob
   });
 };
 

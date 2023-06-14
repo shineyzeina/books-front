@@ -97,7 +97,7 @@ const PasswordForm = (props) => {
             
 			  
 
-              <div className="container-form-btn">
+        <div className="container-form-btn" >
 					<button className="form-btn" disabled={loading}>
 						{loading && (
 							<span className="spinner-border spinner-border-sm"></span>

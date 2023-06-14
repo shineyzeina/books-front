@@ -7,6 +7,8 @@ import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import { Link } from "react-router-dom";
 import { getAuthorLists } from "./AuthorsList"
+const IMG_URL = process.env.REACT_APP_IMG_API;
+console.log("IMAGE URL : " + IMG_URL);
 
 const currentUser = JSON.parse(localStorage.getItem('user'));
 const Authors = () => {
@@ -111,8 +113,10 @@ const Authors = () => {
 							{authors && authors.map((a) => (
 
 								<tr>
+									<Link to={`/author/view/${a.id}`} className="text-dark" style={{ textDecoration: 'none', color: 'inherit' }}>
+										<td valign="top" style={{ borderBottom: '1px solid #ccc' }}><img src={IMG_URL + a.profile_picture_url} alt="Profile Picture" style={{ width: '10%',height: '10%',objectFit : 'cover',borderRadius: '100%' }} />{a.first_name} {a.last_name}</td>
+									</Link>
 
-									<td valign="top">{a.first_name} {a.last_name}</td>
 									<td valign="top">{a.createdBy ? a.createdBy.firstName + " " + a.createdBy.lastName : ""}</td>
 									<td valign="top"><a href={"/author/edit/" + a.id} className="text-dark ">Edit</a>&nbsp;&nbsp;&nbsp;<a href="#" className="text-dark" onClick={(e) => deleteAuthor(e, a.id)} >Delete</a>
 									</td>

@@ -4,6 +4,8 @@ import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import BookService from "../services/book.service";
 import EventBus from "../common/EventBus";
+import Category from "./Category";
+import AuthorDropdown from './AuthorDropdown';
 import { getAuthorLists } from "./AuthorsList"
 
 
@@ -24,6 +26,7 @@ const required = (value) => {
 	const [ISBN, setISBN] = useState("");
 	const [name, setName] = useState("");
 	const [author, setAuthor] = useState("");
+	const [category, setCategory] = useState("");
 	const [authorsList, setAuthorsList] = useState([]);
 	const [successful, setSuccessful] = useState(false);
 	const [loading, setLoading] = useState(false);
@@ -50,7 +53,8 @@ const required = (value) => {
 					let b = response.data;
 					setISBN(b.ISBN);
 					setName(b.name);
-					setAuthor(b.author);
+					setAuthor(b.author.first_name);
+					setCategory(b.category);
 
 
 				},
@@ -81,7 +85,7 @@ const required = (value) => {
 		setLoading(true);
 		if (checkBtn.current.context._errors.length === 0) {
 			if (bookId) {
-				BookService.putBook(bookId, ISBN, name, author).then(
+				BookService.putBook(bookId, ISBN, name, author, category).then(
 					(response) => {
 						setMessage("book Updated.");
 						setSuccessful(true);
@@ -102,7 +106,7 @@ const required = (value) => {
 			}
 			else {
 
-				BookService.postBook(ISBN, name, author).then(
+				BookService.postBook(ISBN, name, author, category).then(
 					(response) => {
 						setMessage("book Saved.");
 						setSuccessful(true);
@@ -162,21 +166,29 @@ const required = (value) => {
 					<span className="focus-input100"></span>
 				</div>
 
-				<div className="wrap-input100 validate-input m-b-18" data-validate="Author is required">
-					<span className="label-input100">Author</span>
-					<select
-						type="text"
-						className="input100"
-						name="author"
+				<div className="wrap-input100 validate-input m-b-18" style={{ display: 'flex', alignItems: 'center' }}>
+					<label className="label-input100" style={{ marginRight: '10px' }}>Author</label>
+					<div style={{ flex: 1 }}>
+						<AuthorDropdown
 						value={author}
 						onChange={e => setAuthor(e.target.value)}
-						validations={[required]}
-					>
-						<option value="" key="0"></option>
-						{authorsList && authorsList.map((a, index) => <option key={index} value={a.id}>{a.first_name} {a.last_name}</option>)}
-					</select>
-					<span className="focus-input100"></span>
+						/>
+					</div>
 				</div>
+
+
+
+
+				<div className="wrap-input100 validate-input m-b-18" style={{ display: 'flex', alignItems: 'center' }}>
+					<label className="label-input100" style={{ marginRight: '10px' }}>Category</label>
+					<div style={{ flex: 1 }}>
+						<Category
+							value = {category}
+							onChange = {e => setCategory(e.target.value)}/>
+					</div>
+				</div>
+
+
 
 
 				<div className="container-form-btn">
