@@ -136,6 +136,6 @@ const Authors = () => {
 
 		</div>
 	);
-};
+						};
 
 export default Authors;
