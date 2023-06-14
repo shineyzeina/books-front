@@ -17,6 +17,7 @@ import AuthorForm from "./components/AuthorForm";
 import Authors from "./components/Authors";
 import PasswordForm from "./components/PasswordForm";
 import AuthorView from "./components/AuthorView";
+import Institutions from "./components/Institutions";
 
 
 // import AuthVerify from "./common/AuthVerify";
@@ -70,6 +71,12 @@ const App = () => {
                 </Link>
               </li>
 
+              <li className="nav-item">
+                <Link to={"/institutions"} className="nav-link text-dark mx-0">
+                  Institutions
+                </Link>
+              </li>
+
               {currentUser.type === "admin" ? <li className="nav-item">
                 <Link to={"/users"} className="nav-link text-dark mx-0">
                   Users
@@ -113,7 +120,7 @@ const App = () => {
       </nav>
       
 
-      <div className="container">
+      <div className="container" >
         <Switch>
           <Route exact path={["/", "/home"]} component={Home} />
           <Route exact path="/login" component={Login} />
@@ -124,7 +131,7 @@ const App = () => {
           <Route path="/author/new" component={AuthorForm} />
           <Route path="/author/view/:authorId" component={AuthorView} />
           <Route path="/author/edit/:id" component={AuthorForm} />
-
+          <Route path="/institutions" component={Institutions}/>
           <Route path="/users" component={Users} />
           <Route path="/books" component={Books} />
           <Route path="/authors" component={Authors} />

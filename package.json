@@ -18,6 +18,8 @@
     "react-bootstrap": "^1.6.4",
     "react-datepicker": "^4.5.0",
     "react-dom": "^16.13.1",
+    "react-image-file-resizer": "^0.4.8",
+    "react-images-upload": "^1.2.8",
     "react-phone-input-2": "^2.15.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.3",

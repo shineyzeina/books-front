@@ -1,5 +1,3 @@
-import React, { useState, useEffect } from "react";
-import authHeader from "../services/auth-header";
 import AuthorService from "../services/author.service";
 import EventBus from "../common/EventBus";
 

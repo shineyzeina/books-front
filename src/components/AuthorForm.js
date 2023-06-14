@@ -5,7 +5,8 @@ import CheckButton from "react-validation/build/button";
 import AuthorService from "../services/author.service";
 import EventBus from "../common/EventBus";
 import CountriesDropDown from "./CountriesDropDown";
-
+import Resizer from "react-image-file-resizer";
+import ImageUploader from "react-images-upload";
 
 const required = (value) => {
 	if (!value) {
@@ -33,9 +34,42 @@ const AuthorForm = (props) => {
 	const [loading, setLoading] = useState(false);
 	const [message, setMessage] = useState("");
 	const [address, setAddress] = useState({});
-	const [picture, setPicture] = useState(null)
-	const [pictureUrl, setPictureUrl] = useState("");
 	const authorId = props.match.params.id;
+	const [picture, setPicture] = useState("");
+    const [picChanged, setPicChanged] = useState(false);
+    const [defaultImage, setDefaultImage] = useState("");
+	
+	const savePic = (p, path) => {
+       
+
+        try {
+            Resizer.imageFileResizer(
+                p[0],
+                300,
+                300,
+                "JPEG",
+                100,
+                0,
+                (uri) => {
+                    let newUri = uri.substring(0, 16) + "name=" + p[0].name + ";" + uri.substring(16, uri.length);
+                    setPicture(newUri);
+                    setDefaultImage(newUri);
+                    setPicChanged(true);
+                },
+                "base64",
+                200,
+                200
+            );
+        } catch (err) {
+            console.log(err);
+        }
+
+    };
+
+    const removePic = () => {
+        setPicture("");
+        setPicChanged(true);
+    }
 
 
 	useEffect(() => {
@@ -91,28 +125,13 @@ const AuthorForm = (props) => {
 		if (checkBtn.current.context._errors.length === 0) {
 			
 			try {
-				// let pic_url  = null;
-				// if (picture) {
-				// 	const formData = new FormData();
-				// 	formData.append("picture", picture);
-				// 	await AuthorService.uploadPicture(formData)
-				// 	.then((response) => {
-				// 		pic_url = "/" + response.data.url;
-				// 		setPictureUrl(pic_url);
-				// 		console.log("Image URL ", pic_url)
-				// 		// Perform actions with the imageUrl (e.g., save to the database)
-				// 	  })
-				// 	  .catch((error) => {
-				// 		console.error("Error uploading picture:", error);
-				// 	  });
-					
-				//   }
-	
+
+				
 
 			if (authorId) {
-				AuthorService.putAuthor(authorId, firstName, lastName, age, nationality, address).then(
+				AuthorService.putAuthor(authorId, firstName, lastName, age, nationality, address, picture).then(
 					(response) => {
-						
+						console.log("Picture ", picture);
 						console.log(firstName, " here")
 						console.log(lastName, " here")
 						console.log(address, " here")
@@ -135,15 +154,16 @@ const AuthorForm = (props) => {
 				);
 			}
 			else {
-
-				AuthorService.postAuthor(firstName, lastName, age, nationality, address).then(
+				console.log("Wsolna la hon")
+				AuthorService.postAuthor(firstName, lastName, age, nationality, address, picture).then(
 					(response) => {
-						console.log(pictureUrl, " hgere")
+						
 						setMessage("Author Saved.");
 						setSuccessful(true);
 						props.history.push('/authors');
 					},
 					(error) => {
+						console.log("Hon ensa ")
 						const resMessage =
 							(error.response &&
 								error.response.data &&
@@ -179,9 +199,6 @@ const AuthorForm = (props) => {
 		  }));
 	}
 
-	const handlePictureChange = (e) => {
-		setPicture(e);
-		}
 	
 	
 	  
@@ -195,7 +212,7 @@ const AuthorForm = (props) => {
 					Author Form
 				</span>
 			</div>
-			<Form className="form validate-form" onSubmit={handleSaveAuthor} ref={form}>
+			<Form action="/upload" method="POST" encType="multipart/form-data" className="form validate-form" onSubmit={handleSaveAuthor} ref={form}>
 
 
 				<div className="wrap-input100 validate-input m-b-18" data-validate="First name is required">
@@ -300,17 +317,25 @@ const AuthorForm = (props) => {
       						/>
       						<span className="focus-input100"></span>
     					</div>
+
+						<div>
+						<ImageUploader
+                                            withIcon={false}
+                                            withPreview={true}
+                                            label=""
+                                            buttonText="Upload picture"
+                                            onChange={savePic}
+                                            accept="image/*"
+                                            singleImage={true}
+                                            defaultImages={defaultImage ? [defaultImage] : ""}
+                                            onDelete={removePic}
+                                            buttonClassName="profileUpload"
+                                        />
+						</div>
   				</div>
 			</div>
 
-			<div className="wrap-input100 validate-input m-b-18">
-           		<span className="label-input100">Image</span>
-            	<input type="file" onChange={e => handlePictureChange(e.target.files[0])} />
-            	<span className="focus-input100"></span>
-          	</div>
-          	
-
-
+		
 
 				<div className="container-form-btn">
 					<button className="form-btn" disabled={loading}>

@@ -1,45 +1,64 @@
 import React, { useState, useEffect } from "react";
-import AuthorService from "../services/author.service";
+import InstitutionService from "../services/institution.service";
 import EventBus from "../common/EventBus";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import { Link } from "react-router-dom";
-import { getAuthorLists } from "./AuthorsList"
 
-const Authors = () => {
+const Institutions = () => {
 	const [error, setError] = useState("");
-	const [authors, setAuthors] = useState([]);
-	// const [successful, setSuccessful] = useState(false);
-	// const [message, setMessage] = useState("");
+	const [institutions, setInstitutions] = useState([]);
 	const [searchKeyword, setSearchKeyword] = useState("");
 
 	useEffect(() => {
-		searchAuthors("");
+		searchInstitutions("");
+        
 	}, []);
 
-	const triggerAuthorSearch = (keyword) => {
+	const triggerInstitutionSearch = (keyword) => {
 		setSearchKeyword(keyword);
-		searchAuthors(keyword);
+		searchInstitutions(keyword);
 
 	}
-	const searchAuthors = async (keyword) => {
-		setAuthors(await getAuthorLists(keyword));
+	const searchInstitutions = async (keyword) => {
+        InstitutionService.getInstitutionsList(keyword).then(
+			(response) => {
+				if (response) {
+                    console.log("Here is the data", response.data);
+                    setInstitutions(response.data);}
+			},
+			(error) => {
+				console.log("Call kello ghalat");
+				const _content =
+					(error.response &&
+						error.response.data &&
+						error.response.data.message) ||
+					error.message ||
+					error.toString();
 
+				setError(_content);
+
+				if (error.response && error.response.status === 401) {
+					EventBus.dispatch("logout");
+
+				}
+			}
+		);
 	}
 
 
-	const deleteAuthor = async (event, id) => {
+	const deleteInstitution = async (event, id) => {
 
-		if (window.confirm("Are you sure you want to delete this author?")) {
-			AuthorService.deleteAuthor(id).then(
+		if (window.confirm("Are you sure you want to delete this institution?")) {
+			InstitutionService.deleteInstitution(id).then(
 				(response) => {
 
 					alert("Author deleted!");
-					let oldList = authors;
+					let oldList = institutions;
 					var data = oldList.filter(function (obj) {
 						return obj.id !== id;
 					});
-					setAuthors(data);
+					setInstitutions(data);
 
 
 				},
@@ -66,7 +85,6 @@ const Authors = () => {
 	return (
 		<div className="sub-container">
 			<table border="0" width="100%">
-				<tbody>
 				<tr>
 					<td align="left">
 						<Form>
@@ -78,26 +96,25 @@ const Authors = () => {
 									name="searchKeyword"
 									value={searchKeyword}
 									placeholder="Search"
-									onChange={e => triggerAuthorSearch(e.target.value)}
+									onChange={e => triggerInstitutionSearch(e.target.value)}
 								/>
 							</div>
 						</Form>
 					</td>
 					<td align="right">
 						<Link to={"/author/new"} className="link-brown">
-							Add Author
+							Add Institution
 						</Link>
 					</td>
 				</tr>
-				</tbody>
 			</table>
 
 			{error ? <header className="jumbotron"> <h3>{error}</h3>  </header> : null}
-			{!error && authors ?
+			{!error && institutions ?
 				<>
 
 
-					<h3> Authors List </h3>
+					<h3> Institutions List </h3>
 					<table className="styled-table">
 						<thead>
 							<tr>
@@ -107,19 +124,15 @@ const Authors = () => {
 							</tr>
 						</thead>
 						<tbody>
-							{authors && authors.map((a) => (
+							{institutions && institutions.map((i) => (
 
-								<tr key = {a.id} >
+								<tr>
 
+									<td valign="top"> {i.name} </td>
+									<td valign="top">{i.createdBy ? i.createdBy.firstName + " " + i.createdBy.lastName : ""}</td>
 									<td valign="top">
-								
-										<img src={a.picture ? process.env.REACT_APP_SERVER_API + "/upload/authors/" + a.picture : "http://localhost:4000/upload/authors/default_profile.jpg"} alt={a.first_name} style={{width: "50px", height: "50px", objectFit: "cover", borderRadius: "50%", marginRight: '10px'}}/>
-										{a.first_name} {a.last_name}
-									</td>
-									<td valign="top">{a.createdBy ? a.createdBy.firstName + " " + a.createdBy.lastName : ""}</td>
-									<td valign="top">
-										<a href={"/author/view/" + a.id} className="text-dark">View</a>&nbsp;&nbsp;&nbsp;
-										<a href={"/author/edit/" + a.id} className="text-dark ">Edit</a>&nbsp;&nbsp;&nbsp;<a href="#" className="text-dark" onClick={(e) => deleteAuthor(e, a.id)} >Delete</a>
+										<a href={"/author/view/" + i.id} className="text-dark">View</a>&nbsp;&nbsp;&nbsp;
+										<a href={"/author/edit/" + i.id} className="text-dark ">Edit</a>&nbsp;&nbsp;&nbsp;<a href="#" className="text-dark" onClick={(e) => deleteInstitution(e, i.id)} >Delete</a>
 										
 									</td>
 								</tr>
@@ -128,7 +141,6 @@ const Authors = () => {
 							}
 
 						</tbody>
-						<tfoot></tfoot>
 					</table>
 				</>
 				: <div> No record found.</div>}
@@ -138,4 +150,4 @@ const Authors = () => {
 	);
 };
 
-export default Authors;
+export default Institutions;

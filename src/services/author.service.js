@@ -12,13 +12,23 @@ const deleteAuthor = (id) => {
   return axios(API_URL + "/author/" + id, {method: 'delete', headers: authHeader()});
 };
 
-const putAuthor = (id,firstName,lastName,age, nationality, address) => {
-  return axios(API_URL + "/author/" + id, {method: 'put', headers: authHeader(),data: { first_name:firstName, last_name:lastName, age:age, nationality:nationality, address:address}});
+const putAuthor = (id,firstName,lastName,age, nationality, address, picture) => {
+  return axios(API_URL + "/author/" + id, {method: 'put', headers: authHeader(),data: { first_name:firstName, last_name:lastName, age:age, nationality:nationality, address:address, picture:picture}});
 };
 
-const postAuthor = (firstName,lastName,age, nationality, address) => {
-  return axios(API_URL + "/author", {method: 'post', headers: authHeader(),data: {  first_name:firstName, last_name:lastName, age:age,nationality:nationality, address:address}});
+const postAuthor = (firstName,lastName,age, nationality, address, picture) => {
+  if (picture){
+    return axios(API_URL + "/author", {method: 'post', headers: authHeader(),data: {  first_name:firstName, last_name:lastName, age:age,nationality:nationality, address:address, picture:picture}});
+  }
+  else {
+    return axios(API_URL + "/author", {method: 'post', headers: authHeader(),data: {  first_name:firstName, last_name:lastName, age:age,nationality:nationality, address:address}});
+  }
+  
 };
+
+// export const getAuthorPicture = (pictureUrl) => {
+//   return axios.get(API_URL + "/upload/authors/" + pictureUrl, { headers: authHeader() , responseType: 'blob'});
+// }
 
 
 
@@ -26,14 +36,10 @@ const getAuthorById = (id) => {
   return axios.get(API_URL + "/author/" + id, { headers: authHeader() });
 };
 
-// const uploadPicture = (formData) => {
+const uploadPicture = (formData) => {
 
-//   return axios.post(API_URL + "/author/upload-picture", formData, { headers: authHeader() });
-// };
-
-// const getPicture = (pictureUrl) => {
-//   return axios.get(API_URL + pictureUrl, { headers: authHeader(), responseType: 'blob' })
-// } 
+  return axios.post(API_URL + "/author/upload-picture", formData, { headers: authHeader() });
+};
 
 
 
@@ -43,7 +49,7 @@ export default {
   deleteAuthor,
   getAuthorsList,
   getAuthorById,
-  // uploadPicture,
-  // getPicture
+  uploadPicture,
+  // getAuthorPicture,
   
 };
