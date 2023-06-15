@@ -5,7 +5,7 @@ import defaultProfile from "../images/profile.png";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import { Link } from "react-router-dom";
-
+import modifiedBooks from '../labels/en/Categories';
 
 const currentUser = JSON.parse(localStorage.getItem('user'));
 
@@ -26,7 +26,7 @@ const Books = () => {
 
 	}
 	const searchBooks = (keyword) => {
-		BookService.getBooksList(keyword).then(
+		BookService.getBooksList({'searchKey' : keyword}).then(
 			(response) => {
 				if (response) {setBooks(response.data);}
 			},
@@ -162,6 +162,7 @@ const Books = () => {
 								<th>ISBN</th>
 								<th>Name</th>
 								<th>Author</th>
+								<th>Category</th>
 								<th>Added By</th>
 								<th>Action</th>
 							</tr>
@@ -174,7 +175,9 @@ const Books = () => {
 									<td valign="top">{b.ISBN} </td>
 									<td valign="top">{b.name}</td>
 									<td valign="top">{b.author ? b.author.first_name + " " + b.author.last_name : ""}</td>
+									<td valign="top">{b.category? modifiedBooks[b.category] : " "}</td>
 									<td valign="top">{b.createdBy ? b.createdBy.firstName + " " + b.createdBy.lastName : ""}</td>
+
 									<td valign="top"><a href={"/book/edit/" + b.id} className="text-dark ">Edit</a>&nbsp;&nbsp;&nbsp;<a href="#" className="text-dark" onClick={(e) => deleteBook(e, b.id)} >Delete</a>
 									&nbsp;&nbsp;&nbsp;{(b.favorites && (b.favorites.indexOf(currentUser.id) >-1 || b.favorite ==true)) ? <a href="#" className="text-dark" onClick={(e) => favoriteBook(e, b.id, "remove")} ><i title="Remove from Favorite" alt= "Remove from Favorite" className="fa fa-heart red-heart"></i></a>: <a href="#" className="text-dark" onClick={(e) => favoriteBook(e, b.id,"add")} ><i title="Add to Favorite" alt= "Add to Favorite" className="fa fa-heart red-grey"></i></a>}
 

@@ -30,6 +30,7 @@
 /*//////////////////////////////////////////////////////////////////
 [ RESTYLE TAG ]*/
 
+
 * {
 	margin: 0px; 
 	padding: 0px; 
@@ -623,4 +624,11 @@ input.input100 {
   width: 100% !important;
   border-top: none !important;
   border-right: none !important;
+}
+
+.authorImg{
+    width:120px;
+    height:120px;
+    border-radius: 50%;
+    object-fit: cover;
 }

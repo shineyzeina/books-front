@@ -16,7 +16,9 @@ import BookForm from "./components/BookForm";
 import AuthorForm from "./components/AuthorForm";
 import Authors from "./components/Authors";
 import PasswordForm from "./components/PasswordForm";
-
+import AuthorView from "./components/AuthorView";
+import Institutions from "./components/Institutions";
+import InstitutionForm from "./components/InstitutionForm";
 
 // import AuthVerify from "./common/AuthVerify";
 import EventBus from "./common/EventBus";
@@ -69,6 +71,12 @@ const App = () => {
                 </Link>
               </li>
 
+              <li className="nav-item">
+                <Link to={"/institutions"} className="nav-link text-dark mx-0">
+                  Institutions
+                </Link>
+              </li>
+
               {currentUser.type == "admin" ? <li className="nav-item">
                 <Link to={"/users"} className="nav-link text-dark mx-0">
                   Users
@@ -104,6 +112,7 @@ const App = () => {
                 Login
               </Link>
             </li>
+
             
 
 
@@ -125,12 +134,13 @@ const App = () => {
           <Route path="/book/edit/:id" component={BookForm} />
           <Route path="/author/new" component={AuthorForm} />
           <Route path="/author/edit/:id" component={AuthorForm} />
-
+          <Route path="/author/view/:id" component={AuthorView} />
           <Route path="/users" component={Users} />
           <Route path="/books" component={Books} />
           <Route path="/authors" component={Authors} />
           <Route path="/user/password" component={PasswordForm} />
-
+          <Route path="/institutions" component={Institutions}/>
+          <Route path="/institution/new" component={InstitutionForm}></Route>
         </Switch>
       </div>
 

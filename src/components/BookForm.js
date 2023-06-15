@@ -5,6 +5,10 @@ import CheckButton from "react-validation/build/button";
 import BookService from "../services/book.service";
 import EventBus from "../common/EventBus";
 import { getAuthorLists } from "./AuthorsList"
+import BookCategory from './BookCategories'
+import AuthCategory from "./AuthCategories";
+
+
 
 
 const required = (value) => {
@@ -17,31 +21,29 @@ const required = (value) => {
 	}
 };
 
-	const BookForm = (props) => {
+const BookForm = (props) => {
 	const form = useRef();
 	const checkBtn = useRef();
 
 	const [ISBN, setISBN] = useState("");
 	const [name, setName] = useState("");
 	const [author, setAuthor] = useState("");
-	const [authorsList, setAuthorsList] = useState([]);
 	const [successful, setSuccessful] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [message, setMessage] = useState("");
+	const [category, setCategory] = useState("");
 	const bookId = props.match.params.id;
 
 
 	useEffect(() => {
 		async function onReady() {
-
-			setAuthorsList(await getAuthorLists())
 			getBookInfo();
-
 		}
 
 		onReady()
-
 	}, []);
+
+	
 
 	const getBookInfo = () => {
 		if (bookId) {
@@ -51,8 +53,6 @@ const required = (value) => {
 					setISBN(b.ISBN);
 					setName(b.name);
 					setAuthor(b.author);
-
-
 				},
 				(error) => {
 					const _content =
@@ -102,8 +102,9 @@ const required = (value) => {
 			}
 			else {
 
-				BookService.postBook(ISBN, name, author).then(
+				BookService.postBook(ISBN, name, author,category).then(
 					(response) => {
+						console.log(author);
 						setMessage("book Saved.");
 						setSuccessful(true);
 						props.history.push('/books');
@@ -164,20 +165,22 @@ const required = (value) => {
 
 				<div className="wrap-input100 validate-input m-b-18" data-validate="Author is required">
 					<span className="label-input100">Author</span>
-					<select
-						type="text"
-						className="input100"
-						name="author"
-						value={author}
-						onChange={e => setAuthor(e.target.value)}
-						validations={[required]}
-					>
-						<option value="" key="0"></option>
-						{authorsList && authorsList.map((a, index) => <option key={index} value={a.id}>{a.first_name} {a.last_name}</option>)}
-					</select>
+					<AuthCategory
+					   category={author}
+					   setCategory={(e) => setAuthor(e.target.value)}
+					/>
 					<span className="focus-input100"></span>
 				</div>
 
+				<div className="wrap-input100 validate-input m-b-18" data-validate="Category is required">
+					<span className="label-input100">Category</span>
+					<BookCategory
+						category={category}
+						setCategory={(e) => setCategory(e.target.value)}
+						validations = {[required]}
+					/>
+					<span className="focus-input100"></span>
+				</div>
 
 				<div className="container-form-btn">
 					<button className="form-btn" disabled={loading}>
