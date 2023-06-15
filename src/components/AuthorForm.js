@@ -8,6 +8,8 @@ import AuthorService from '../services/author.service';
 import EventBus from '../common/EventBus';
 import Country from '../components/Nationality';
 
+const API_URL = "http://localhost:4000/upload";
+
 
 const required = (value) => {
   if (!value) {
@@ -81,6 +83,7 @@ const AuthorForm = (props) => {
           setPublishingHouse(a.publishing_house);
           setAuthorAge(a.author_age);
           setAuthorNationality(a.author_nationality);
+          setDefaultImage(API_URL + a.profile_picture_url);
           // setProfilePictureUrl(a.profile_picture_url); // Store the profile picture URL
         },
         (error) => {

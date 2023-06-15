@@ -5,6 +5,7 @@ import BookService from "../services/book.service";
 import { getAuthorProfilePicture } from "../services/author.service";
 import EventBus from "../common/EventBus";
 import './AuthorView.css';
+const API_URL = "http://localhost:4000/upload/";
 
 const AuthorView = () => {
   const [authorsList, setAuthorsList] = useState([]);
@@ -56,15 +57,15 @@ const AuthorView = () => {
       const author = authorsList.find((author) => author.id === authorId);
       if (author) {
         setCurrentAuthor(author);
-        // Fetch the profile picture
-      getAuthorProfilePicture(author.profile_picture_url)
-      .then((response) => {
-        const imgUrl = URL.createObjectURL(response.data);
-        setProfilePictureUrl(imgUrl);
-      })
-      .catch((error) => {
-        // Handle error
-      });
+      //   // Fetch the profile picture
+      // getAuthorProfilePicture(author.profile_picture_url)
+      // .then((response) => {
+      //   const imgUrl = URL.createObjectURL(response.data);
+        setProfilePictureUrl(API_URL + author.profile_picture_url);
+      // })
+      // .catch((error) => {
+      //   // Handle error
+      // });
       }
     }
   }, [authorId, authorsList]);

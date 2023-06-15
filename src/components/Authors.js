@@ -114,7 +114,7 @@ const Authors = () => {
 
 								<tr>
 									<Link to={`/author/view/${a.id}`} className="text-dark" style={{ textDecoration: 'none', color: 'inherit' }}>
-										<td valign="top" style={{ borderBottom: '1px solid #ccc' }}><img src={IMG_URL + a.profile_picture_url} alt="Profile Picture" style={{ width: '10%',height: '10%',objectFit : 'cover',borderRadius: '100%' }} />{a.first_name} {a.last_name}</td>
+										<td valign="top" style={{ borderBottom: '1px solid #ccc' }}><img src={IMG_URL + a.profile_picture_url} alt="Profile Picture" style={{ width: '10%',height: '10%',objectFit : 'cover',borderRadius: '50%' }} />{a.first_name} {a.last_name}</td>
 									</Link>
 
 									<td valign="top">{a.createdBy ? a.createdBy.firstName + " " + a.createdBy.lastName : ""}</td>
