@@ -4,6 +4,12 @@ import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import AuthorService from "../services/author.service";
 import EventBus from "../common/EventBus";
+import ImageUploader from "react-images-upload";
+import Resizer from "react-image-file-resizer"
+import FormData from 'form-data';
+import TextInput from "./TextInput";
+
+const API_URL = process.env.REACT_APP_SERVER_API ;
 
 
 const required = (value) => {
@@ -18,19 +24,61 @@ const required = (value) => {
 
 
 
-
-
 const AuthorForm = (props) => {
 	const form = useRef();
 	const checkBtn = useRef();
 
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
+	const [biography, setBiography] = useState("");
+	const [date_of_birth, setDateOfBirth] = useState("");
+	const [nationality, setNationality] = useState("");
 	const [successful, setSuccessful] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [message, setMessage] = useState("");
 	const authorId = props.match.params.id;
+	const [ defaultImage, setDefaultImage] = useState(null);
+	const [picChanged, setPicChanged] = useState(false);
+	const [picName, setPicName] = useState("");
+	const [picture, setPicture] = useState("");
 
+	
+	const savePic = (p,path) => {
+		try {
+			console.log(p)
+			Resizer.imageFileResizer(
+				p[0],
+				300,
+				300,
+				"JPEG",
+				100,
+				0,
+				(uri) => {
+					let newUri = uri.substring(0,16) + "name=" + p[0].name + ";" + uri.substring(16,uri.length);
+					setPicName(p[0].name)
+					setPicture(newUri);
+					setDefaultImage(newUri);
+					setPicChanged(true);
+				},
+				"base64",
+				200,
+				200
+				
+			);
+		}catch (err){
+			console.log(err);
+			setPicture("");
+       		setPicChanged(true);
+			setPicName("");
+		}
+	};
+
+	const removePic = () => {
+		
+        setPicture("");
+        setPicChanged(true);
+		setPicName("");
+    }
 
 	useEffect(() => {
 		async function onReady() {
@@ -48,8 +96,16 @@ const AuthorForm = (props) => {
 					let a = response.data;
 					setFirstName(a.first_name);
 					setLastName(a.last_name);
-
-
+					setBiography(a.biography);
+					setDateOfBirth(a.date_of_birth);
+					setNationality(a.nationality);
+					if(a.date_of_birth)
+						setDateOfBirth( new Date(a.date_of_birth).toISOString().split('T')[0]);
+					if (a.authorImage != ''){
+						setDefaultImage(API_URL + '/uploads/' + a.authorImage)
+						setPicName(a.authorImage);
+					}
+						
 				},
 				(error) => {
 					const _content =
@@ -77,8 +133,10 @@ const AuthorForm = (props) => {
 		form.current.validateAll();
 		setLoading(true);
 		if (checkBtn.current.context._errors.length === 0) {
+
 			if (authorId) {
-				AuthorService.putAuthor(authorId, firstName, lastName).then(
+				console.log(picChanged);
+				AuthorService.putAuthor(authorId, firstName, lastName, nationality, biography, date_of_birth, picture, picChanged, picName).then(
 					(response) => {
 						setMessage("Author Updated.");
 						setSuccessful(true);
@@ -98,8 +156,16 @@ const AuthorForm = (props) => {
 				);
 			}
 			else {
-
-				AuthorService.postAuthor(firstName, lastName).then(
+				AuthorService.postAuthor(
+					firstName,
+					lastName,
+					nationality,
+					biography,
+					date_of_birth,
+					picture,
+					picChanged,
+					picName
+				).then(
 					(response) => {
 						setMessage("Author Saved.");
 						setSuccessful(true);
@@ -124,6 +190,7 @@ const AuthorForm = (props) => {
 	};
 
 
+
 	return (
 
 		<div className="wrap-form">
@@ -134,6 +201,18 @@ const AuthorForm = (props) => {
 			</div>
 			<Form className="form validate-form" onSubmit={handleSaveAuthor} ref={form}>
 
+			<ImageUploader
+					withIcon={false}
+					withPreview={true}
+					label=""
+					buttonText="Upload picture"
+					onChange={savePic}
+					accept="image/*"
+					singleImage={true}
+					defaultImages={ defaultImage? [defaultImage]: "" }
+					onDelete={removePic}
+					buttonClassName="profileUpload"
+				/>
 
 				<div className="wrap-input100 validate-input m-b-18" data-validate="Name is required">
 					<span className="label-input100">First Name</span>
@@ -148,6 +227,8 @@ const AuthorForm = (props) => {
 					<span className="focus-input100"></span>
 				</div>
 
+				
+
 				<div className="wrap-input100 validate-input m-b-18" data-validate="Password is required">
 					<span className="label-input100">Last Name</span>
 					<Input
@@ -159,6 +240,46 @@ const AuthorForm = (props) => {
 						validations={[required]}
 					/>
 					<span className="focus-input100"></span>
+				</div>
+
+				<div className="wrap-input100 validate-input m-b-18" data-validate="Password is required">
+					<span className="label-input100">Nationality</span>
+					<Input
+						type="text"
+						className="input100"
+						name="Nationality"
+						value={nationality}
+						onChange={e => setNationality(e.target.value)}
+						validations={[required]}
+					/>
+					<span className="focus-input100"></span>
+				</div>
+
+
+				<div className="wrap-input100 validate-input m-b-18" data-validate="Password is required">
+					<span className="label-input100">Biography</span>
+					<Input
+						type="text"
+						className="input100"
+						name="Nationality"
+						value={biography}
+						onChange={e => setBiography(e.target.value)}
+						validations={[required]}
+					/>
+					<span className="focus-input100"></span>
+				</div>
+
+				<div className="wrap-input100 validate-input m-b-18" data-validate="Password is required">
+					<span className="label-input100">DOB</span>
+					<Input
+						type="date"
+						className="input100"
+						name="Birthdate"
+						value={date_of_birth}
+						onChange={e => setDateOfBirth(e.target.value)}
+						validations={[required]}
+					/>
+
 				</div>
 
 
@@ -190,7 +311,7 @@ const AuthorForm = (props) => {
 				<CheckButton style={{ display: "none" }} ref={checkBtn} />
 			</Form >
 		</div>
-
+		
 	);
 };
 

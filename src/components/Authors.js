@@ -15,6 +15,8 @@ const Authors = () => {
 	const [successful, setSuccessful] = useState(false);
 	const [message, setMessage] = useState("");
 	const [searchKeyword, setSearchKeyword] = useState("");
+	const API_URL = process.env.REACT_APP_SERVER_API ;
+
 
 	useEffect(() => {
 		searchAuthors("");
@@ -111,10 +113,9 @@ const Authors = () => {
 							{authors && authors.map((a) => (
 
 								<tr>
-
-									<td valign="top">{a.first_name} {a.last_name}</td>
-									<td valign="top">{a.createdBy ? a.createdBy.firstName + " " + a.createdBy.lastName : ""}</td>
-									<td valign="top"><a href={"/author/edit/" + a.id} className="text-dark ">Edit</a>&nbsp;&nbsp;&nbsp;<a href="#" className="text-dark" onClick={(e) => deleteAuthor(e, a.id)} >Delete</a>
+									<td valign="top"><a href={"/author/view/" + a.id} ><img src={a.authorImage?API_URL +"/uploads/" + a.authorImage: API_URL +"/uploads/DefaultAuthor.png"} className="authorImg" alt="" /> {a.first_name}  {a.last_name} </a> </td>
+									<td valign="center">{a.createdBy ? a.createdBy.firstName + " " + a.createdBy.lastName : ""}</td>
+									<td valign="center"><a href={"/author/edit/" + a.id} className="text-dark ">Edit</a>&nbsp;&nbsp;&nbsp;<a href="#" className="text-dark" onClick={(e) => deleteAuthor(e, a.id)} >Delete</a>
 									</td>
 								</tr>
 
