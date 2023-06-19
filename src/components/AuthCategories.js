@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getAuthorLists } from "./AuthorsList";
 import Dropdown from './Dropdown';
 
-const AuthCategory = ({ category, setCategory }) => {
+const AuthCategory = ({ category, setCategory ,multiple}) => {
   const [authors, setAuthors] = useState([]);
 
   async function fetchData() {
@@ -24,6 +24,7 @@ const AuthCategory = ({ category, setCategory }) => {
       selectedCategory={category}
       onChange={setCategory}
       categories={authors}
+      multiple={multiple}
     />
   );
 };

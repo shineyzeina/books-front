@@ -9,6 +9,8 @@ import Resizer from "react-image-file-resizer"
 import FormData from 'form-data';
 import TextInput from "./TextInput";
 
+const API_URL = process.env.REACT_APP_SERVER_API ;
+
 
 const required = (value) => {
 	if (!value) {
@@ -19,8 +21,6 @@ const required = (value) => {
 		);
 	}
 };
-
-
 
 
 
@@ -37,7 +37,7 @@ const AuthorForm = (props) => {
 	const [loading, setLoading] = useState(false);
 	const [message, setMessage] = useState("");
 	const authorId = props.match.params.id;
-	const [ defaultImage, setDefaultImage] = useState("");
+	const [ defaultImage, setDefaultImage] = useState(null);
 	const [picChanged, setPicChanged] = useState(false);
 	const [picName, setPicName] = useState("");
 	const [picture, setPicture] = useState("");
@@ -45,6 +45,7 @@ const AuthorForm = (props) => {
 	
 	const savePic = (p,path) => {
 		try {
+			console.log(p)
 			Resizer.imageFileResizer(
 				p[0],
 				300,
@@ -66,12 +67,17 @@ const AuthorForm = (props) => {
 			);
 		}catch (err){
 			console.log(err);
+			setPicture("");
+       		setPicChanged(true);
+			setPicName("");
 		}
 	};
 
 	const removePic = () => {
+		
         setPicture("");
         setPicChanged(true);
+		setPicName("");
     }
 
 	useEffect(() => {
@@ -81,8 +87,7 @@ const AuthorForm = (props) => {
 
 		onReady()
 
-	}, [date_of_birth]);
-
+	}, []);
 
 	const getAuthorInfo = () => {
 		if (authorId) {
@@ -94,10 +99,13 @@ const AuthorForm = (props) => {
 					setBiography(a.biography);
 					setDateOfBirth(a.date_of_birth);
 					setNationality(a.nationality);
-					if(date_of_birth){
-						const formattedDateOfBirth = new Date(date_of_birth).toISOString().split('T')[0];
-						setDateOfBirth(formattedDateOfBirth);
+					if(a.date_of_birth)
+						setDateOfBirth( new Date(a.date_of_birth).toISOString().split('T')[0]);
+					if (a.authorImage != ''){
+						setDefaultImage(API_URL + '/uploads/' + a.authorImage)
+						setPicName(a.authorImage);
 					}
+						
 				},
 				(error) => {
 					const _content =
@@ -127,6 +135,7 @@ const AuthorForm = (props) => {
 		if (checkBtn.current.context._errors.length === 0) {
 
 			if (authorId) {
+				console.log(picChanged);
 				AuthorService.putAuthor(authorId, firstName, lastName, nationality, biography, date_of_birth, picture, picChanged, picName).then(
 					(response) => {
 						setMessage("Author Updated.");
@@ -147,7 +156,6 @@ const AuthorForm = (props) => {
 				);
 			}
 			else {
-				alert("TEstttt");
 				AuthorService.postAuthor(
 					firstName,
 					lastName,
@@ -193,7 +201,7 @@ const AuthorForm = (props) => {
 			</div>
 			<Form className="form validate-form" onSubmit={handleSaveAuthor} ref={form}>
 
-				<ImageUploader
+			<ImageUploader
 					withIcon={false}
 					withPreview={true}
 					label=""
@@ -201,12 +209,10 @@ const AuthorForm = (props) => {
 					onChange={savePic}
 					accept="image/*"
 					singleImage={true}
-					defaultImage={defaultImage ? [defaultImage]:""}
+					defaultImages={ defaultImage? [defaultImage]: "" }
 					onDelete={removePic}
 					buttonClassName="profileUpload"
-				>
-
-				</ImageUploader>
+				/>
 
 				<div className="wrap-input100 validate-input m-b-18" data-validate="Name is required">
 					<span className="label-input100">First Name</span>
@@ -305,7 +311,7 @@ const AuthorForm = (props) => {
 				<CheckButton style={{ display: "none" }} ref={checkBtn} />
 			</Form >
 		</div>
-
+		
 	);
 };
 

@@ -8,6 +8,8 @@ import ImageUploader from "react-images-upload";
 import Resizer from "react-image-file-resizer"
 import FormData from 'form-data';
 import TextInput from "./TextInput";
+import Select from 'react-select';
+import makeAnimated from 'react-select/animated'
 import AuthCategory from "./AuthCategories";
 
 const required = (value) => {
@@ -20,6 +22,7 @@ const required = (value) => {
     }
 };
 
+const animatedComponents = makeAnimated();
 
 const InstitutionForm = (props) => {
     const form = useRef();
@@ -45,7 +48,6 @@ const InstitutionForm = (props) => {
                         type="text"
                         className="input100"
                         name="instName"
-                       
                         validations={[required]}
                     />
                     <span className="focus-input100"></span>
@@ -69,6 +71,24 @@ const InstitutionForm = (props) => {
 					/>
 					<span className="focus-input100"></span>
 				</div>
+                <div className="wrap-input100 validate-input m-b-18" data-validate="Name is required">
+                    <span className="label-input100">
+                        Authors
+                    </span>
+                    <Select
+                        closeMenuOnSelect={false}
+                        components={animatedComponents}
+                        defaultValue={["hello"]}
+                        isMulti
+                       
+                        options={[
+                            {value: 'test',label: 'test'},
+                            {value: 'world',label: 'world'}]
+                        }
+                    >
+
+                    </Select>
+                </div>
                 <div className="container-form-btn">
 					<button className="form-btn" disabled={loading}>
 						{loading && (
