@@ -81,7 +81,7 @@ const BookForm = (props) => {
 		setLoading(true);
 		if (checkBtn.current.context._errors.length === 0) {
 			if (bookId) {
-				BookService.putBook(bookId, ISBN, name, author).then(
+				BookService.putBook(bookId, ISBN, name, author,category).then(
 					(response) => {
 						setMessage("book Updated.");
 						setSuccessful(true);

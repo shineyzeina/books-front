@@ -227,8 +227,6 @@ const AuthorForm = (props) => {
 					<span className="focus-input100"></span>
 				</div>
 
-				
-
 				<div className="wrap-input100 validate-input m-b-18" data-validate="Password is required">
 					<span className="label-input100">Last Name</span>
 					<Input
@@ -254,7 +252,6 @@ const AuthorForm = (props) => {
 					/>
 					<span className="focus-input100"></span>
 				</div>
-
 
 				<div className="wrap-input100 validate-input m-b-18" data-validate="Password is required">
 					<span className="label-input100">Biography</span>
