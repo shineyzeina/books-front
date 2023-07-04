@@ -6,130 +6,147 @@ import defaultProfile from "../images/profile.png";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import { Link } from "react-router-dom";
-import { getAuthorLists } from "./AuthorsList"
+import { getAuthorLists } from "./AuthorsList";
 
-const currentUser = JSON.parse(localStorage.getItem('user'));
+const currentUser = JSON.parse(localStorage.getItem("user"));
 const Authors = () => {
-	const [error, setError] = useState("");
-	const [authors, setAuthors] = useState([]);
-	const [successful, setSuccessful] = useState(false);
-	const [message, setMessage] = useState("");
-	const [searchKeyword, setSearchKeyword] = useState("");
-	const API_URL = process.env.REACT_APP_SERVER_API ;
+  const [error, setError] = useState("");
+  const [authors, setAuthors] = useState([]);
+  const [successful, setSuccessful] = useState(false);
+  const [message, setMessage] = useState("");
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const API_URL = process.env.REACT_APP_SERVER_API;
 
+  useEffect(() => {
+    searchAuthors("");
+  }, []);
 
-	useEffect(() => {
-		searchAuthors("");
-	}, []);
+  const triggerAuthorSearch = (keyword) => {
+    setSearchKeyword(keyword);
+    searchAuthors(keyword);
+  };
+  const searchAuthors = async (keyword) => {
+    setAuthors(await getAuthorLists(keyword));
+  };
 
-	const triggerAuthorSearch = (keyword) => {
-		setSearchKeyword(keyword);
-		searchAuthors(keyword);
+  const deleteAuthor = async (event, id) => {
+    if (window.confirm("Are you sure you want to delete this author?")) {
+      AuthorService.deleteAuthor(id).then(
+        (response) => {
+          alert("Author deleted!");
+          let oldList = authors;
+          var data = oldList.filter(function (obj) {
+            return obj.id !== id;
+          });
+          setAuthors(data);
+        },
+        (error) => {
+          const _content =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
 
-	}
-	const searchAuthors = async (keyword) => {
-		setAuthors(await getAuthorLists(keyword));
+          setError(_content);
 
-	}
+          if (error.response && error.response.status === 401) {
+            EventBus.dispatch("logout");
+          }
+        }
+      );
+    }
+  };
 
+  return (
+    <div className="sub-container">
+      <table border="0" width="100%">
+        <tr>
+          <td align="left">
+            <Form>
+              <div className="form-group">
+                <Input
+                  type="text"
+                  className="form-control half_width"
+                  name="searchKeyword"
+                  value={searchKeyword}
+                  placeholder="Search"
+                  onChange={(e) => triggerAuthorSearch(e.target.value)}
+                />
+              </div>
+            </Form>
+          </td>
+          <td align="right">
+            <Link to={"/author/new"} className="link-brown">
+              Add Author
+            </Link>
+          </td>
+        </tr>
+      </table>
 
-	const deleteAuthor = async (event, id) => {
-
-		if (window.confirm("Are you sure you want to delete this author?")) {
-			AuthorService.deleteAuthor(id).then(
-				(response) => {
-
-					alert("Author deleted!");
-					let oldList = authors;
-					var data = oldList.filter(function (obj) {
-						return obj.id !== id;
-					});
-					setAuthors(data);
-
-
-				},
-				(error) => {
-					const _content =
-						(error.response &&
-							error.response.data &&
-							error.response.data.message) ||
-						error.message ||
-						error.toString();
-
-					setError(_content);
-
-					if (error.response && error.response.status === 401) {
-						EventBus.dispatch("logout");
-
-					}
-				}
-			);
-		}
-	}
-
-
-	return (
-		<div className="sub-container">
-			<table border="0" width="100%">
-				<tr>
-					<td align="left">
-						<Form>
-							<div className="form-group">
-
-								<Input
-									type="text"
-									className="form-control half_width"
-									name="searchKeyword"
-									value={searchKeyword}
-									placeholder="Search"
-									onChange={e => triggerAuthorSearch(e.target.value)}
-								/>
-							</div>
-						</Form>
-					</td>
-					<td align="right">
-						<Link to={"/author/new"} className="link-brown">
-							Add Author
-						</Link>
-					</td>
-				</tr>
-			</table>
-
-			{error ? <header className="jumbotron"> <h3>{error}</h3>  </header> : null}
-			{!error && authors ?
-				<>
-
-
-					<h3> Authors List </h3>
-					<table className="styled-table">
-						<thead>
-							<tr>
-								<th>Name</th>
-								<th>Created By</th>
-								<th>Action</th>
-							</tr>
-						</thead>
-						<tbody>
-							{authors && authors.map((a) => (
-
-								<tr>
-									<td valign="top"><a href={"/author/view/" + a.id} ><img src={a.authorImage?API_URL +"/uploads/" + a.authorImage: API_URL +"/uploads/DefaultAuthor.png"} className="authorImg" alt="" /> {a.first_name}  {a.last_name} </a> </td>
-									<td valign="center">{a.createdBy ? a.createdBy.firstName + " " + a.createdBy.lastName : ""}</td>
-									<td valign="center"><a href={"/author/edit/" + a.id} className="text-dark ">Edit</a>&nbsp;&nbsp;&nbsp;<a href="#" className="text-dark" onClick={(e) => deleteAuthor(e, a.id)} >Delete</a>
-									</td>
-								</tr>
-
-							))
-							}
-
-						</tbody>
-					</table>
-				</>
-				: <div> No record found.</div>}
-
-
-		</div>
-	);
+      {error ? (
+        <header className="jumbotron">
+          {" "}
+          <h3>{error}</h3>{" "}
+        </header>
+      ) : null}
+      {!error && authors ? (
+        <>
+          <h3> Authors List </h3>
+          <table className="styled-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Created By</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {authors &&
+                authors.map((a) => (
+                  <tr>
+                    <td valign="top">
+                      <a href={"/author/view/" + a.id}>
+                        <img
+                          src={
+                            a.authorImage
+                              ? API_URL + "/uploads/authors/" + a.authorImage
+                              : API_URL + "/uploads/authors/profile.png"
+                          }
+                          className="authorImg"
+                          alt=""
+                        />{" "}
+                        {a.first_name} {a.last_name}{" "}
+                      </a>{" "}
+                    </td>
+                    <td valign="center">
+                      {a.createdBy
+                        ? a.createdBy.firstName + " " + a.createdBy.lastName
+                        : ""}
+                    </td>
+                    <td valign="center">
+                      <a href={"/author/edit/" + a.id} className="text-dark ">
+                        Edit
+                      </a>
+                      &nbsp;&nbsp;&nbsp;
+                      <a
+                        href="#"
+                        className="text-dark"
+                        onClick={(e) => deleteAuthor(e, a.id)}
+                      >
+                        Delete
+                      </a>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </>
+      ) : (
+        <div> No record found.</div>
+      )}
+    </div>
+  );
 };
 
 export default Authors;
