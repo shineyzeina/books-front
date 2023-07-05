@@ -73,3 +73,28 @@
   .hidden{
     display:none;
   }
+
+  .pagination-select-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  .pagination-container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+    width: 80%;
+    padding-right: 20%;
+  }
+
+  .paginationBttns {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .select-container {
+    width: 20%;
+  }
+  

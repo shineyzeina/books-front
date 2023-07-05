@@ -15,12 +15,6 @@ const getInstitutionsCount = (data) => {
   });
 };
 
-// const getAuthorsList = (institutionId) => {
-//   return axios.get(API_URL + "/institutions?institutionId=" + institutionId, {
-//     headers: authHeader(),
-//   });
-// };
-
 const deleteInstitution = (id) => {
   return axios(API_URL + "/institution/" + id, {
     method: "delete",
@@ -82,13 +76,6 @@ const getSomeInstitutions = (data) => {
   });
 };
 
-// const getSomeInstitutions = (searchKey) => {
-//   return axios.get(API_URL + "/institutions/partial", {
-//     headers: authHeader(),
-//     params: { searchKey: searchKey },
-//   });
-// };
-
 const getInstitutionById = (id) => {
   return axios.get(API_URL + "/institution/" + id, { headers: authHeader() });
 };
@@ -101,5 +88,4 @@ export default {
   getInstitutionById,
   deleteInstitution,
   getInstitutionsCount,
-  // getAuthorsList,
 };

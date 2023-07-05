@@ -32,17 +32,23 @@ const Institutions = () => {
                 ? API_URL + "/uploads/institutions/" + i.institutionImage
                 : API_URL + "/uploads/institutions/profile.jpg"
             }
-            className="authorImg"
             alt=""
+            style={{
+              width: "75px",
+              height: "75px",
+              objectFit: "cover",
+              borderRadius: "50%",
+              marginRight: "10px",
+            }}
           />
           {i.name}
         </td>
-        <td valign="top">
+        <td valign="center">
           {i.createdBy
             ? i.createdBy.firstName + " " + i.createdBy.lastName
             : ""}
         </td>
-        <td valign="top">
+        <td valign="center">
           <a href={"/institution/view/" + i.id} className="text-dark">
             View
           </a>
@@ -63,46 +69,9 @@ const Institutions = () => {
     );
   });
 
-  useEffect(() => {
-    const fetchInstitutionsCount = async () => {
-      try {
-        const countResponse = await InstitutionService.getInstitutionsCount({
-          searchKey: searchKeyword,
-        });
-        if (countResponse) {
-          setInstitutionsCount(countResponse.data);
-        }
-      } catch (error) {
-        const _content =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-        setError(_content);
-      }
-    };
-
-    fetchInstitutionsCount();
-  }, [searchKeyword]);
-
   const changePage = ({ selected }) => {
     setPageNumber(selected);
   };
-
-  useEffect(() => {
-    // Calculate neededData when data changes
-    if (institutionsCount.count) {
-      const ans = Math.ceil(institutionsCount.count / institutionsPerPage);
-      setPageCount(ans);
-      setPageNumber(0);
-    }
-  }, [institutionsCount, institutionsPerPage]);
-
-  // useEffect(() => {
-  //   setPageCount(Math.ceil(institutionsCount.count / institutionsPerPage));
-  //   setPageNumber(0);
-  // }, [institutionsPerPage]);
 
   useEffect(() => {
     const fetchInstitutions = async () => {
@@ -113,7 +82,9 @@ const Institutions = () => {
           limit: institutionsPerPage,
         });
         if (response) {
-          setInstitutions(response.data);
+          console.log(response.data[0], response.data[1]);
+          setInstitutions(response.data[0]);
+          setInstitutionsCount(response.data[1]);
         }
       } catch (error) {
         const _content =
@@ -132,6 +103,15 @@ const Institutions = () => {
 
     fetchInstitutions();
   }, [searchKeyword, pageNumber, institutionsPerPage]);
+
+  useEffect(() => {
+    // Calculate neededData when data changes
+    if (institutionsCount) {
+      const ans = Math.ceil(institutionsCount / institutionsPerPage);
+      setPageCount(ans);
+      setPageNumber(0);
+    }
+  }, [institutionsCount, institutionsPerPage]);
 
   const triggerInstitutionSearch = (keyword) => {
     setSearchKeyword(keyword);
@@ -207,64 +187,52 @@ const Institutions = () => {
       ) : null}
 
       {institutions.length > 0 ? (
-        <>
-          <div className="header-container">
-            <div className="left">
-              <h3>Institutions List</h3>
-            </div>
-            <div className="right">
-              <div className="select-container">
-                <label htmlFor="dropdown-select">Institutions per page</label>
-                <select
-                  className="dropdown-select"
-                  onChange={handleDropdownChange}
-                  value={institutionsPerPage}
-                >
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="5">5</option>
-                  <option value="10">10</option>
-                  <option value="20">20</option>
-                  <option value="50">50</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <table className="styled-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Created By</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>{displayInstitutions}</tbody>
-          </table>
-
-          {pageCount ? (
-            <div className="pagination-container">
-              <ReactPaginate
-                previousLabel={"Previous"}
-                nextLabel={"Next"}
-                pageCount={pageCount}
-                marginPagesDisplayed={2}
-                onPageChange={changePage}
-                containerClassName={"paginationBttns"}
-                previousLinkClassName={isOnFirstPage ? "hidden" : ""}
-                nextLinkClassName={isOnLastPage ? "hidden" : ""}
-                disabledClassName={"paginationDisabled"}
-                activeClassName={"paginationActive"}
-                forcePage={pageNumber}
-              />
-            </div>
-          ) : (
-            <div>loading...</div>
-          )}
-        </>
+        <table className="styled-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Created By</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>{displayInstitutions}</tbody>
+        </table>
       ) : (
         <div>No record found.</div>
       )}
+
+      <div className="pagination-select-container">
+        <div className="pagination-container">
+          <ReactPaginate
+            previousLabel={"Previous"}
+            nextLabel={"Next"}
+            pageCount={pageCount}
+            marginPagesDisplayed={2}
+            onPageChange={changePage}
+            containerClassName={"paginationBttns"}
+            previousLinkClassName={isOnFirstPage ? "hidden" : ""}
+            nextLinkClassName={isOnLastPage ? "hidden" : ""}
+            disabledClassName={"paginationDisabled"}
+            activeClassName={"paginationActive"}
+            forcePage={pageNumber}
+          />
+        </div>
+
+        <div className="select-container">
+          <select
+            className="dropdown-select"
+            onChange={handleDropdownChange}
+            value={institutionsPerPage}
+          >
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+          </select>
+        </div>
+      </div>
     </div>
   );
 };
