@@ -3,10 +3,10 @@ import { Switch, Route, Link, Redirect } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import "./util.css";
-import logo from "./images/logo.png";
+import logo from './images/logo.png';
 import AuthService from "./services/auth.service";
 
-import SignUpForm from "./components/SignupForm";
+import SignUpForm from "./components/SignupForm"
 import Login from "./components/Login";
 import Home from "./components/Home";
 import Profile from "./components/Profile";
@@ -19,12 +19,13 @@ import PasswordForm from "./components/PasswordForm";
 import AuthorView from "./components/AuthorView";
 import Institutions from "./components/Institutions";
 import InstitutionForm from "./components/InstitutionForm";
-import InstitutionView from "./components/InstitutionView";
+import BooksAnalytics from "./components/BooksAnalytics";
 
 // import AuthVerify from "./common/AuthVerify";
 import EventBus from "./common/EventBus";
 
 const App = () => {
+
   const [currentUser, setCurrentUser] = useState(undefined);
 
   useEffect(() => {
@@ -46,14 +47,14 @@ const App = () => {
   const logOut = () => {
     AuthService.logout();
     setCurrentUser(undefined);
-    window.location.href =
-      window.location.protocol + "//" + window.location.host + "/login";
+    window.location.href = window.location.protocol + "//" + window.location.host + "/login";
   };
 
   return (
     <div className="limiter">
+
       <nav className="navbar navbar-expand ">
-        <Link to={"/"}>
+        <Link to={"/"} >
           <img className="logo" src={logo} alt="logo" />
         </Link>
         <div className="navbar-nav mr-auto">
@@ -77,15 +78,12 @@ const App = () => {
                 </Link>
               </li>
 
-              {currentUser.type == "admin" ? (
-                <li className="nav-item">
-                  <Link to={"/users"} className="nav-link text-dark mx-0">
-                    Users
-                  </Link>
-                </li>
-              ) : (
-                ""
-              )}
+              {currentUser.type == "admin" ? <li className="nav-item">
+                <Link to={"/users"} className="nav-link text-dark mx-0">
+                  Users
+                </Link>
+              </li> : ""}
+
             </>
           )}
         </div>
@@ -98,11 +96,7 @@ const App = () => {
               </Link>
             </li>
             <li className="nav-item ">
-              <a
-                href="/login"
-                className="nav-link text-dark mx-0"
-                onClick={logOut}
-              >
+              <a href="/login" className="nav-link text-dark mx-0" onClick={logOut}>
                 LogOut
               </a>
             </li>
@@ -119,10 +113,17 @@ const App = () => {
                 Login
               </Link>
             </li>
+
+            
+
+
           </div>
         )}
       </nav>
-      <div></div>
+      <div>
+
+
+      </div>
 
       <div className="container">
         <Switch>
@@ -131,6 +132,7 @@ const App = () => {
           <Route exact path="/register" component={SignUpForm} />
           <Route exact path="/profile" component={Profile} />
           <Route path="/book/new" component={BookForm} />
+          <Route path="/analytics" component={BooksAnalytics}/>
           <Route path="/book/edit/:id" component={BookForm} />
           <Route path="/author/new" component={AuthorForm} />
           <Route path="/author/edit/:id" component={AuthorForm} />
@@ -139,10 +141,9 @@ const App = () => {
           <Route path="/books" component={Books} />
           <Route path="/authors" component={Authors} />
           <Route path="/user/password" component={PasswordForm} />
-          <Route path="/institutions" component={Institutions} />
-          <Route path="/institution/new" component={InstitutionForm} />
-          <Route path="/institution/view/:id" component={InstitutionView} />
-          <Route path="/institution/edit/:id" component={InstitutionForm} />
+          <Route path="/institutions" component={Institutions}/>
+          <Route path="/institution/new" component={InstitutionForm}>
+          </Route>
         </Switch>
       </div>
 

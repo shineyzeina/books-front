@@ -148,6 +148,12 @@ const Books = () => {
             </Form>
           </td>
 
+          <td align="right">
+            <Link to={"/analytics"} className="link-brown">
+              Analytics
+            </Link>
+          </td>
+
           <td className="row align-items-center">
             <span className="col-6">
               <label className="text-end" htmlFor="">
@@ -186,6 +192,7 @@ const Books = () => {
                 <th>Name</th>
                 <th>Author</th>
                 <th>Category</th>
+                <th>Rating</th>
                 <th>Added By</th>
                 <th>Action</th>
               </tr>
@@ -204,6 +211,7 @@ const Books = () => {
                     <td valign="top">
                       {b.category ? modifiedBooks[b.category] : " "}
                     </td>
+                    <td valign="top">{b.rating}</td>
                     <td valign="top">
                       {b.createdBy
                         ? b.createdBy.firstName + " " + b.createdBy.lastName

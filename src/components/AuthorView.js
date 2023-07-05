@@ -1,18 +1,21 @@
-import React, { useEffect, useState } from "react";
-import EventBus from "../common/EventBus";
+import React, { useEffect, useState } from 'react';
+import EventBus from '../common/EventBus';
 import AuthService from "../services/author.service.js";
 import BookService from "../services/book.service";
-import modifiedBook from "../labels/en/Categories";
+import modifiedBook from '../labels/en/Categories';
+
+
 
 const AuthorView = (props) => {
-  const authorId = props.match.params.id;
-  const [author, setAuthor] = useState(null);
-  const [booksByAuthor, setBooksByAuthor] = useState(null);
-  const [authorName, setAuthorName] = useState("");
-  const [imageSource, setImageSource] = useState(null);
-  const [authorImage, setAuthorImage] = useState("");
-  const [srcImg, setSrcImg] = useState("");
-  const API_URL = process.env.REACT_APP_SERVER_API;
+  const authorId = props.match.params.id
+  const [author, setAuthor] = useState(null)
+  const [booksByAuthor, setBooksByAuthor] = useState(null)
+  const [authorName, setAuthorName] = useState('')
+  const [imageSource, setImageSource] = useState(null)
+  const [authorImage, setAuthorImage] = useState('')
+  const [srcImg, setSrcImg] = useState('')
+  const API_URL = process.env.REACT_APP_SERVER_API ;
+
 
   useEffect(() => {
     async function onReady() {
@@ -20,17 +23,21 @@ const AuthorView = (props) => {
     }
 
     onReady();
-  }, []);
+  }, [])
+
+
 
   const getAuthorInfo = () => {
     if (authorId) {
       AuthService.getAuthorById(authorId).then(
+
         async (response) => {
           let a = response.data;
-          setAuthor(a);
-          if (a.authorImage != "")
-            setSrcImg(API_URL + "/uploads/authors/" + a.authorImage);
-          else setSrcImg(API_URL + "/uploads/authors/profile.png");
+          setAuthor(a)
+          if(a.authorImage != "")
+            setSrcImg(API_URL + '/uploads/' + a.authorImage)
+          else 
+            setSrcImg(API_URL + '/uploads/DefaultAuthor.png')
         },
         (error) => {
           const _content =
@@ -39,6 +46,7 @@ const AuthorView = (props) => {
               error.response.data.message) ||
             error.message ||
             error.toString();
+
 
           if (error.response && error.response.status === 401) {
             EventBus.dispatch("logout");
@@ -46,12 +54,13 @@ const AuthorView = (props) => {
         }
       );
       if (author) {
+
+
       }
       BookService.getBooksList({ authorId: authorId }).then(
         async (response) => {
           let b = response.data;
           setBooksByAuthor(b);
-          console.log(b);
         },
         (error) => {
           const _content =
@@ -61,43 +70,29 @@ const AuthorView = (props) => {
             error.message ||
             error.toString();
 
+
           if (error.response && error.response.status === 401) {
             EventBus.dispatch("logout");
           }
         }
-      );
+      )
     }
-  };
+  }
+
 
   return (
     <div className="sub-container">
       <div className="jumbotron">
+
         <div className="row">
           <div className="col-md-2">
             {/* Add the image component here */}
-            {author && (
-              <img
-                src={srcImg}
-                width="100px"
-                height="100px"
-                alt="Author"
-                className="authorImg"
-              />
-            )}
+            {author && <img src={srcImg} width="100px" height="100px" alt="Author" className="authorImg" />}
           </div>
           <div className="col-md-10">
             <h3>{author && author.first_name + " " + author.last_name}</h3>
             <h5 className="mt-2">About the Author:</h5>
-            <p>
-              Born in{" "}
-              {author &&
-                author.date_of_birth &&
-                new Date(author.date_of_birth).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "2-digit",
-                  day: "2-digit",
-                })}
-            </p>
+            <p>Born in {author && author.date_of_birth && new Date(author.date_of_birth).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' })}</p>
             <p>Nationality: {author && author.nationality}</p>
             <p>Bio: {author && author.biography}</p>
           </div>
@@ -123,7 +118,8 @@ const AuthorView = (props) => {
         </div>
       </div>
     </div>
-  );
-};
+
+  )
+}
 
 export default AuthorView;
