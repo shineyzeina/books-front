@@ -267,6 +267,7 @@ const Books = () => {
                   placeholder="Search"
                   onChange={(e) => triggerBookSearch(e.target.value)}
                 />
+
               </Form>
             </td>
 
@@ -299,6 +300,7 @@ const Books = () => {
             </td>
           </tr>
         </tbody>
+
       </table>
 
       {error ? (
@@ -316,6 +318,7 @@ const Books = () => {
                 <th>Name</th>
                 <th>Author</th>
                 <th>Category</th>
+                <th>Rating</th>
                 <th>Added By</th>
                 <th>Action</th>
               </tr>
@@ -334,6 +337,7 @@ const Books = () => {
                     <td valign="top">
                       {b.category ? modifiedBooks[b.category] : " "}
                     </td>
+                    <td valign="top">{b.rating}</td>
                     <td valign="top">
                       {b.createdBy
                         ? b.createdBy.firstName + " " + b.createdBy.lastName

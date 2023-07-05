@@ -1,5 +1,6 @@
-import React from 'react';
-import Select from 'react-select';
+import React from "react";
+import Select from "react-select";
+
 
 const Dropdown = ({selectedCategory,onChange,categories}) => {
     return (
@@ -17,6 +18,5 @@ const Dropdown = ({selectedCategory,onChange,categories}) => {
 }
 
 
+
 export default Dropdown;
-
-

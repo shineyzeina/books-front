@@ -20,6 +20,7 @@ import PasswordForm from "./components/PasswordForm";
 import AuthorView from "./components/AuthorView";
 import Institutions from "./components/Institutions";
 import InstitutionForm from "./components/InstitutionForm";
+import BooksAnalytics from "./components/BooksAnalytics";
 
 // import AuthVerify from "./common/AuthVerify";
 import EventBus from "./common/EventBus";
@@ -131,6 +132,7 @@ const App = () => {
           <Route exact path="/register" component={SignUpForm} />
           <Route exact path="/profile" component={Profile} />
           <Route path="/book/new" component={BookForm} />
+          <Route path="/analytics" component={BooksAnalytics}/>
           <Route path="/book/edit/:id" component={BookForm} />
           <Route path="/author/new" component={AuthorForm} />
           <Route path="/author/edit/:id" component={AuthorForm} />
@@ -139,8 +141,10 @@ const App = () => {
           <Route path="/books" component={Books} />
           <Route path="/authors" component={Authors} />
           <Route path="/user/password" component={PasswordForm} />
+
           <Route path="/institutions" component={Institutions} />
           <Route path="/institution/new" component={InstitutionForm}></Route>
+
         </Switch>
       </div>
 

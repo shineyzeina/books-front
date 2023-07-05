@@ -32,6 +32,7 @@ const BookForm = (props) => {
 	const [loading, setLoading] = useState(false);
 	const [message, setMessage] = useState("");
 	const [category, setCategory] = useState("");
+	const [rating, setRating] = useState("");
 	const bookId = props.match.params.id;
 
 
@@ -53,6 +54,7 @@ const BookForm = (props) => {
 					setISBN(b.ISBN);
 					setName(b.name);
 					setAuthor(b.author);
+					setRating(b.rating);
 				},
 				(error) => {
 					const _content =
@@ -81,7 +83,9 @@ const BookForm = (props) => {
 		setLoading(true);
 		if (checkBtn.current.context._errors.length === 0) {
 			if (bookId) {
-				BookService.putBook(bookId, ISBN, name, author,category).then(
+
+				BookService.putBook(bookId, ISBN, name, author,category, rating).then(
+
 					(response) => {
 						setMessage("book Updated.");
 						setSuccessful(true);
@@ -102,7 +106,7 @@ const BookForm = (props) => {
 			}
 			else {
 
-				BookService.postBook(ISBN, name, author,category).then(
+				BookService.postBook(ISBN, name, author,category, rating).then(
 					(response) => {
 						console.log(author);
 						setMessage("book Saved.");
@@ -178,6 +182,19 @@ const BookForm = (props) => {
 						category={category}
 						setCategory={(e) => setCategory(e.target.value)}
 						validations = {[required]}
+					/>
+					<span className="focus-input100"></span>
+				</div>
+
+				<div className="wrap-input100 validate-input m-b-18" data-validate="ISBN is required">
+					<span className="label-input100">Rating</span>
+					<Input
+						type="text"
+						className="input100"
+						name="ISBN"
+						value={rating}
+						onChange={e => setRating(e.target.value)}
+						validations={[required]}
 					/>
 					<span className="focus-input100"></span>
 				</div>

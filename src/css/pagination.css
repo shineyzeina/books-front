@@ -1,0 +1,100 @@
+.paginationBttns {
+    width: 80%;
+    height: 40px;
+    display : flex;
+    justify-content: center;
+    margin-top: 40px;
+    margin-left: 5%;
+
+}
+
+.paginationBttns a {
+    padding: 10px;
+    margin: 8px;
+    border-radius: 5px;
+    border: 1px solid  rgb(203, 92, 52);
+    color:  rgb(203, 92, 52);
+    cursor: pointer;
+}
+
+.paginationBttns li:hover {
+    color:white
+}
+
+.paginationBttns li {
+    color: rgb(217, 202, 202);
+    
+}
+
+
+.paginationBttns a:hover {
+    color: white;
+    background-color:  rgb(203, 92, 52);
+}
+
+.paginationActive a {
+    color: white;
+    background-color: rgb(203, 92, 52);
+}
+
+
+.header-container {
+    display: grid;
+    grid-template-columns: 70% 30%;
+    gap: 20px;
+  }
+  
+  .left {
+    grid-column: 1;
+  }
+  
+  .right {
+    grid-column: 2;
+  }
+
+
+  .select-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .select-container label {
+    width: 63%;
+    margin-right: 2%;
+    color: rgb(89, 89, 89);
+    font-size: 14px;
+  }
+  
+  .select-container select {
+    width: 35%;
+    margin-right: 0%;
+  }
+
+  .hidden{
+    display:none;
+  }
+
+  .pagination-select-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  .pagination-container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+    width: 80%;
+    padding-right: 20%;
+  }
+
+  .paginationBttns {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .select-container {
+    width: 20%;
+  }
+  

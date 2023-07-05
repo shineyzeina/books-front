@@ -57,11 +57,10 @@ const AuthorView = (props) => {
 
 
       }
-      BookService.getBooksList({ 'authorId': authorId }).then(
+      BookService.getBooksList({ authorId: authorId }).then(
         async (response) => {
           let b = response.data.books;
           setBooksByAuthor(b);
-          console.log(b);
         },
         (error) => {
           const _content =
@@ -106,13 +105,14 @@ const AuthorView = (props) => {
               <th>Category</th>
             </thead>
             <tbody>
-              {booksByAuthor && booksByAuthor.map((book) =>
-                <tr>
-                  <td>{book.ISBN}</td>
-                  <td>{book.name}</td>
-                  <td>{modifiedBook[book.category]}</td>
-                </tr>
-              )}
+              {booksByAuthor &&
+                booksByAuthor.map((book) => (
+                  <tr>
+                    <td>{book.ISBN}</td>
+                    <td>{book.name}</td>
+                    <td>{modifiedBook[book.category]}</td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>

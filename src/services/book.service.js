@@ -5,7 +5,9 @@ const API_URL = process.env.REACT_APP_SERVER_API ;
 
 
 const getBooksList = (data) => {
+
   return axios.get(API_URL + "/books?keyword=" + data.searchKey + "&authId=" + data.authorId + "&page=" + data.page + "&items=" + data.items ,{ headers: authHeader() });
+
 };
 
 // const getBooksByPages = (data) => {
@@ -16,15 +18,17 @@ const deleteBook = (id) => {
   return axios(API_URL + "/book/" + id, {method: 'delete', headers: authHeader()});
 };
 
-const putBook = (_id, ISBN, name, author,category) => {
-  return axios(API_URL + "/book/" + _id, {method: 'put', headers: authHeader(),data: {ISBN, name, author, category}});
+
+const putBook = (_id, ISBN, name, author,category, rating) => {
+  return axios(API_URL + "/book/" + _id, {method: 'put', headers: authHeader(),data: {ISBN, name, author, category, rating}});
+
 };
 
 const favoriteBook = (_id,action) =>{
   return axios(API_URL + "/book/favorite/" + _id, {method: 'put', headers: authHeader(),data: {action}});
 }
-const postBook = (ISBN, name, author, category) => {
-  return axios(API_URL + "/book", {method: 'post', headers: authHeader(),data: {ISBN, name, author, category}});
+const postBook = (ISBN, name, author, category, rating) => {
+  return axios(API_URL + "/book", {method: 'post', headers: authHeader(),data: {ISBN, name, author, category, rating}});
 };
 
 const getBookById = (id) => {
@@ -45,6 +49,16 @@ const loadPdfUrl  = (name) => {
   return (API_URL  +"/pdf/" + name + ".pdf");
 };
 
+const getBooksGenreData = () => {
+  return axios.get(API_URL + "/genres/counts", { headers: authHeader() });
+};
+
+const getBookRatings = () => {
+  return axios.get(API_URL + '/ratings/get-rating', { headers: authHeader() });
+};
+
+
+
 export default {
   putBook,
   postBook,
@@ -54,5 +68,8 @@ export default {
   uploadPic,
   loadPic,
   favoriteBook,
-  loadPdfUrl
+  loadPdfUrl,
+  getBookRatings,
+  getBooksGenreData
+  
 };

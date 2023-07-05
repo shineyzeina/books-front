@@ -4,8 +4,11 @@ import authHeader from "./auth-header";
 const API_URL = process.env.REACT_APP_SERVER_API;
 
 
-const getAuthorsList = (searchKey) => {
-  return axios.get(API_URL + "/authors?keyword=" + searchKey, { headers: authHeader() });
+const getAuthorsList = (searchKey, page, limit) => {
+  return axios.get(API_URL + "/authors", {
+    headers: authHeader(),
+    params: { keyword: searchKey, page: page, limit: limit }
+  });
 };
 
 const deleteAuthor = (id) => {
@@ -25,8 +28,9 @@ const getAuthorById = (id) => {
   return axios.get(API_URL + "/author/" + id, { headers: authHeader() });
 };
 
-
-
+const getBooksCounts = () => {
+  return axios.get(API_URL + '/counts/get-books', { headers: authHeader() });
+};
 
 export default {
   putAuthor,
@@ -34,5 +38,6 @@ export default {
   deleteAuthor,
   getAuthorsList,
   getAuthorById,
+  getBooksCounts
 
 };
