@@ -16,10 +16,6 @@ const Dropdown = ({selectedCategory,onChange,categories}) => {
     )
 }
 
-const DropdownSearch = () =>{
-
-}
-
 
 export default Dropdown;
 
