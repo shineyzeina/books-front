@@ -46,7 +46,7 @@ const Books = () => {
             console.log(response.data);
             setBooks(response.data.books);
             setTotalPages(response.data.total / itemsPerPage + 1);
-          }
+            }
         },
         (error) => {
           const _content =
@@ -424,6 +424,9 @@ const Books = () => {
           <option value="50">50</option>
           <option value="100">100</option>
         </select>
+        <Link to={"/analytics"} className="text-dark">
+                      Books Analytics
+        </Link>
       </div>
     </div>
   );
