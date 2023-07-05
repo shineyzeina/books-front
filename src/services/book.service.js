@@ -5,16 +5,23 @@ const API_URL = process.env.REACT_APP_SERVER_API ;
 
 
 const getBooksList = (data) => {
-  return axios.get(API_URL + "/books?keyword=" + data.searchKey + "&authId=" + data.authorId, { headers: authHeader() });
-  
+
+  return axios.get(API_URL + "/books?keyword=" + data.searchKey + "&authId=" + data.authorId + "&page=" + data.page + "&items=" + data.items ,{ headers: authHeader() });
+
 };
+
+// const getBooksByPages = (data) => {
+//   return axios.get(API_URL + "/books?page=", { headers: authHeader() });
+// }
 
 const deleteBook = (id) => {
   return axios(API_URL + "/book/" + id, {method: 'delete', headers: authHeader()});
 };
 
-const putBook = (_id, ISBN, name, author, rating) => {
-  return axios(API_URL + "/book/" + _id, {method: 'put', headers: authHeader(),data: {ISBN, name, author, rating}});
+
+const putBook = (_id, ISBN, name, author,category, rating) => {
+  return axios(API_URL + "/book/" + _id, {method: 'put', headers: authHeader(),data: {ISBN, name, author, category, rating}});
+
 };
 
 const favoriteBook = (_id,action) =>{

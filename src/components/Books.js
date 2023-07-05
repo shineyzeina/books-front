@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import BookService from "../services/book.service";
 import EventBus from "../common/EventBus";
 import defaultProfile from "../images/profile.png";
@@ -6,7 +6,14 @@ import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import { Link } from "react-router-dom";
 import modifiedBooks from "../labels/en/Categories";
+import AsyncSelect from "react-select/async";
 import AuthCategory from "./AuthCategories";
+import AuthService from "../services/author.service.js";
+import { getAuthorLists } from "./AuthorsList";
+import { Alert } from "bootstrap";
+import bookService from "../services/book.service";
+import SweetPagination from "sweetpagination";
+import { PaginationControl } from "react-bootstrap-pagination-control";
 
 const currentUser = JSON.parse(localStorage.getItem("user"));
 
@@ -16,36 +23,137 @@ const Books = () => {
   const [successful, setSuccessful] = useState(false);
   const [message, setMessage] = useState("");
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [author, setAuthor ] = useState("");
+  const [author, setAuthor] = useState("");
+  const [authors, setAuthors] = useState("");
+  const [authVal, setAuthorVal] = useState("");
+  // const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState("");
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [totalItems, setTotalItems] = useState("");
+  const [page, setPage] = useState(1);
 
+  const triggerBookPages = (page,items) => {
+    bookService
+      .getBooksList({
+        searchKey: searchKeyword,
+        authorId: author,
+        page: page,
+        items: items || itemsPerPage,
+      })
+      .then(
+        (response) => {
+          if (response) {
+            console.log(response.data);
+            setBooks(response.data.books);
+            setTotalPages(response.data.total / itemsPerPage + 1);
+          }
+        },
+        (error) => {
+          const _content =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+
+          setError(_content);
+
+          if (error.response && error.response.status === 401) {
+            EventBus.dispatch("logout");
+          }
+        }
+      );
+  };
+
+  const handleChange = (selectedOption) => {
+    console.log("Handle Change", selectedOption);
+    setAuthorVal(selectedOption);
+    setAuthor(selectedOption.value);
+  };
+
+  //Button Search
+  const triggerBookSearchByAuthor = () => {
+    if (author != "") searchBooks(searchKeyword, author);
+    else alert("Please Select An Author");
+  };
+
+  //Button Reset
+  const resetBooks = () => {
+    setAuthor("");
+    setSearchKeyword("");
+    searchBooks("", "");
+    setAuthorVal("");
+  };
+
+  const triggerAuthorSearch = (searchValue, callback) => {
+    if (searchValue.length >= 3) {
+      console.log("Ana hon");
+      // searchAuthors(searchValue);
+      AuthService.getAuthorsList(searchValue).then(
+        (response) => {
+          console.log(response.data);
+          setAuthors(response.data);
+          setTimeout(() => {
+            const options = [];
+            if (response.data) {
+              console.log(authors);
+              response.data.forEach((author) => {
+                const option = {
+                  value: author.id,
+                  label: author.first_name + " " + author.last_name,
+                };
+                options.push(option);
+              });
+            }
+            if (options) {
+              callback(options);
+              console.log(options);
+            }
+          }, 2000);
+        },
+        (error) => {
+          const _content =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+
+          setError(_content);
+
+          if (error.response && error.response.status === 401) {
+            EventBus.dispatch("logout");
+          }
+        }
+      );
+    }
+  };
 
   useEffect(() => {
     searchBooks("");
   }, []);
 
-  const triggerBookSearchByAuthor = (authorId) => {
-	console.log(authorId);
-	setAuthor(authorId);
-	searchBooksByAuthor(authorId);
-  }
-  const searchBooksByAuthor = (author) => {
-	BookService.getBooksList({ 'authorId' : author}).then((
-		response)  => {
-			console.log(response.data)
-			setBooks(response.data)
-		}
-	) 
-  }
+
 
   const triggerBookSearch = (keyword) => {
     setSearchKeyword(keyword);
-    searchBooks(keyword);
+    searchBooks(keyword, author);
   };
-  const searchBooks = (keyword) => {
-    BookService.getBooksList({ searchKey: keyword }).then(
+
+  //Search for books by book filter and author filter
+  const searchBooks = (keyword, authId) => {
+    BookService.getBooksList({
+      searchKey: keyword,
+      authorId: authId,
+      items: itemsPerPage,
+    }).then(
       (response) => {
         if (response) {
-          setBooks(response.data);
+          setBooks(response.data.books);
+          console.log(response.data);
+          setTotalPages(response.data.total / itemsPerPage + 1);
+          setTotalItems(response.data.total);
+          console.log(totalPages);
         }
       },
       (error) => {
@@ -133,47 +241,66 @@ const Books = () => {
 
   return (
     <div className="sub-container">
-      <table border="0" width="100%">
-        <tr className="d-flex justify-content-between align-items-center">
-          <td>
-            <Form>
+      <span className="row">
+        <Link to={"/book/new"} className="align-middle text-end link-brown">
+          Add Book
+        </Link>
+        <p className="text-end link-brown">Total Records: {totalItems}</p>
+      </span>
+
+      <table className="table table-borderless" border="0" width="100%">
+        <thead className="">
+          <th colSpan={4} className="align-items-center">
+            <h3 className="text-center text-dark">Books List </h3>
+          </th>
+        </thead>
+        <tbody>
+          <tr className="align-items-center">
+            <td align="left">
+              <Form>
+                <label className="form-label">Search Books</label>
                 <Input
                   type="text"
-                  className="form-control"
+                  className="form-control w-75"
                   name="searchKeyword"
                   value={searchKeyword}
                   placeholder="Search"
                   onChange={(e) => triggerBookSearch(e.target.value)}
                 />
-            </Form>
-          </td>
 
-          <td align="right">
-            <Link to={"/analytics"} className="link-brown">
-              Analytics
-            </Link>
-          </td>
+              </Form>
+            </td>
 
-          <td className="row align-items-center">
-            <span className="col-6">
-              <label className="text-end" htmlFor="">
-                Filter by Authors
-              </label>
-            </span>
-            <span className="col-6">
-              <AuthCategory
-                category={author}
-                setCategory={(e) => triggerBookSearchByAuthor(e.target.value)}
-              />
-            </span>
-          </td>
+            <td align="left">
+              <div style={{ width: "300px" }}>
+                <label className="form-label"> Select an author </label>
+                <AsyncSelect
+                  className=""
+                  loadOptions={triggerAuthorSearch}
+                  onChange={handleChange}
+                  value={authVal}
+                  placeholder="Select An Author"
+                />
+              </div>
+            </td>
 
-          <td align="right">
-            <Link to={"/book/new"} className="link-brown">
-              Add Book
-            </Link>
-          </td>
-        </tr>
+            <td align="right" className="align-bottom">
+              <button
+                onClick={triggerBookSearchByAuthor}
+                className="btn btn-outline-success"
+              >
+                Search
+              </button>
+            </td>
+
+            <td align="right" className="align-bottom">
+              <button onClick={resetBooks} className="btn btn-outline-dark">
+                Reset
+              </button>
+            </td>
+          </tr>
+        </tbody>
+
       </table>
 
       {error ? (
@@ -184,7 +311,6 @@ const Books = () => {
       ) : null}
       {!error && books ? (
         <>
-          <h3> Books List </h3>
           <table className="styled-table">
             <thead>
               <tr>
@@ -267,6 +393,38 @@ const Books = () => {
       ) : (
         <div> No record found.</div>
       )}
+
+      <div>
+        <PaginationControl
+          page={page}
+          between={4}
+          total={totalItems}
+          limit={itemsPerPage}
+          changePage={(page) => {
+            setPage(page);
+            triggerBookPages(page);
+            console.log(page);
+          }}
+          ellipsis={1}
+        />
+
+        <label className="form-label">Choose Number of Records per page</label>
+        <select 
+          className="form-select w-25"
+          value={itemsPerPage}
+          onChange={(e) => {
+            setItemsPerPage(e.target.value)
+            console.log(page)
+            triggerBookPages(page,e.target.value)
+            console.log(e.target.value)
+           }}>
+          <option value="5">5</option>
+          <option value="15">15</option>
+          <option value="30">30</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+      </div>
     </div>
   );
 };

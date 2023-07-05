@@ -73,11 +73,13 @@ const AuthorForm = (props) => {
     }
   };
 
+
   const removePic = () => {
     setPicture("");
     setPicChanged(true);
     setPicName("");
   };
+
 
   useEffect(() => {
     async function onReady() {

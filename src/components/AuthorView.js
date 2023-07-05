@@ -59,7 +59,7 @@ const AuthorView = (props) => {
       }
       BookService.getBooksList({ authorId: authorId }).then(
         async (response) => {
-          let b = response.data;
+          let b = response.data.books;
           setBooksByAuthor(b);
         },
         (error) => {
