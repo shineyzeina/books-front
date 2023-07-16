@@ -5,6 +5,7 @@ const API_URL = process.env.REACT_APP_SERVER_API;
 
 
 const getAuthorsList = (searchKey, page, limit) => {
+  console.log("Ana honn")
   return axios.get(API_URL + "/authors", {
     headers: authHeader(),
     params: { keyword: searchKey, page: page, limit: limit }

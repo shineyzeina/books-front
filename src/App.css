@@ -180,8 +180,8 @@ iframe {
   justify-content: center;
   
   padding: 15px;
-  background: #ebeeef;
- 
+  /* background: #ebeeef; */
+  
 }
 .sub-container{
 	width:98%;

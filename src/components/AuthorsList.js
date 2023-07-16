@@ -4,8 +4,10 @@ import AuthorService from "../services/author.service";
 import EventBus from "../common/EventBus";
 
 export const getAuthorLists = async (keyword) => {
-  let res = await AuthorService.getAuthorsList(keyword).then(
+  console.log("Ana hon")
+  let res = await AuthorService.getAuthorsList(keyword,null,null).then(
     (response) => {
+      console.log(response.data)
       return response.data;
     },
     (error) => {

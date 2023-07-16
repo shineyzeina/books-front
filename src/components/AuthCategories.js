@@ -7,8 +7,9 @@ const AuthCategory = ({ category, setCategory, multiple }) => {
 
   async function fetchData() {
     const fetchedAuthorsList = await getAuthorLists();
-    if (fetchedAuthorsList  && fetchedAuthorsList.length) {
-      const authors = fetchedAuthorsList.map((author, index) => ({
+    console.log(fetchedAuthorsList)
+    if (fetchedAuthorsList  && fetchedAuthorsList.allAuth.length) {
+      const authors = fetchedAuthorsList.allAuth.map((author, index) => ({
         id: author.id,
         value: author.first_name + " " + author.last_name,
       }));

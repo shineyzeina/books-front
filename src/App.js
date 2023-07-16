@@ -21,7 +21,6 @@ import AuthorView from "./components/AuthorView";
 import Institutions from "./components/Institutions";
 import InstitutionForm from "./components/InstitutionForm";
 import BooksAnalytics from "./components/BooksAnalytics";
-
 // import AuthVerify from "./common/AuthVerify";
 import EventBus from "./common/EventBus";
 
