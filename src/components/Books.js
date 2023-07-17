@@ -12,7 +12,8 @@ import AuthService from "../services/author.service.js";
 import { getAuthorLists } from "./AuthorsList";
 import { Alert } from "bootstrap";
 import bookService from "../services/book.service";
-import SweetPagination from "sweetpagination";
+import "./test.css"
+
 import { PaginationControl } from "react-bootstrap-pagination-control";
 
 const currentUser = JSON.parse(localStorage.getItem("user"));
@@ -92,12 +93,13 @@ const Books = () => {
       AuthService.getAuthorsList(searchValue).then(
         (response) => {
           console.log(response.data);
-          setAuthors(response.data);
+          setAuthors(response.data.authors);
           setTimeout(() => {
             const options = [];
             if (response.data) {
+              console.log("Anaa honee");
               console.log(authors);
-              response.data.forEach((author) => {
+              response.data.authors.forEach((author) => {
                 const option = {
                   value: author.id,
                   label: author.first_name + " " + author.last_name,
@@ -240,40 +242,35 @@ const Books = () => {
   };
 
   return (
-    <div className="sub-container">
-      <span className="row">
-        <Link to={"/book/new"} className="align-middle text-end link-brown">
+    <div className="sub-container shadow p-3 mb-5 bg-body-tertiary rounded">
+      <h2 className="text-center " > Book List </h2>
+      <span className="d-flex flex-column align-items-end">
+        <Link to={"/book/new"} className="align-middle text-end btn btn-outline-primary">
           Add Book
         </Link>
-        <p className="text-end link-brown">Total Records: {totalItems}</p>
+      
+       
       </span>
 
-      <table className="table table-borderless" border="0" width="100%">
-        <thead className="">
-          <th colSpan={4} className="align-items-center">
-            <h3 className="text-center text-dark">Books List </h3>
-          </th>
-        </thead>
+      <table className="table table-borderless mt-4" border="0" width="100%">
+
         <tbody>
           <tr className="align-items-center">
             <td align="left">
               <Form>
-                <label className="form-label">Search Books</label>
                 <Input
                   type="text"
                   className="form-control w-75"
                   name="searchKeyword"
                   value={searchKeyword}
-                  placeholder="Search"
+                  placeholder="Search Books"
                   onChange={(e) => triggerBookSearch(e.target.value)}
                 />
-
               </Form>
             </td>
 
             <td align="left">
               <div style={{ width: "300px" }}>
-                <label className="form-label"> Select an author </label>
                 <AsyncSelect
                   className=""
                   loadOptions={triggerAuthorSearch}
@@ -311,47 +308,44 @@ const Books = () => {
       ) : null}
       {!error && books ? (
         <>
-          <table className="styled-table">
-            <thead>
-              <tr>
-                <th>ISBN</th>
-                <th>Name</th>
-                <th>Author</th>
-                <th>Category</th>
-                <th>Rating</th>
-                <th>Added By</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {books &&
-                books.map((b) => (
-                  <tr>
-                    <td valign="top">{b.ISBN} </td>
-                    <td valign="top">{b.name}</td>
-                    <td valign="top">
-                      {b.author
-                        ? b.author.first_name + " " + b.author.last_name
-                        : ""}
-                    </td>
-                    <td valign="top">
-                      {b.category ? modifiedBooks[b.category] : " "}
-                    </td>
-                    <td valign="top">{b.rating}</td>
-                    <td valign="top">
-                      {b.createdBy
-                        ? b.createdBy.firstName + " " + b.createdBy.lastName
-                        : ""}
-                    </td>
-
-                    <td valign="top">
-                      <a href={"/book/edit/" + b.id} className="text-dark ">
+    <div class="cream-bg pt-5 pb-5">
+      <div class="container ">
+        <div class="row g-5 justify-content-evenly">
+          {books && books.map((b) => (
+               <div class="col-lg-6">
+               <div class="card shadow">
+                 <div class="row g-0">
+                   <div class="col-6 col-md-5">
+                     <img
+                       src="https://www.coveractionspremium.com/images/Square85x85Softcover-120p-template-v1BIG.jpg"
+                       class="card-img img-fluid rounded-start"
+                       alt="Book"
+                     />
+                   </div>
+                   <div class="col-6 col-md-7">
+                     <div class="card-body d-flex flex-column">
+                       <div class="h-100">
+                         <h3 class="card-title">
+                           ISBN: {b.ISBN}
+                         </h3>
+                         <h2 class="card-title">
+                           Name: {b.name}
+                         </h2>
+                         <p class="card-text">Author: {b.author? b.author.first_name + " " + b.author.last_name : ""}<br/>
+                          Rating: {b.rating} <br />
+                         
+                          </p>
+                         <h6 class="card-title mb-3"> Created by:<strong>  {b.createdBy? b.createdBy.firstName + " " + b.createdBy.lastName: ""}</strong></h6>
+                       </div>
+                       <div>
+                       <a href={"/book/edit/" + b.id} className="btn btn-dark">
                         Edit
                       </a>
+
                       &nbsp;&nbsp;&nbsp;
                       <a
                         href="#"
-                        className="text-dark"
+                        className="btn btn-danger"
                         onClick={(e) => deleteBook(e, b.id)}
                       >
                         Delete
@@ -384,16 +378,23 @@ const Books = () => {
                           ></i>
                         </a>
                       )}
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
+
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+             </div>
+          ))}
+       
+        </div>
+      </div>
+    </div>
         </>
       ) : (
         <div> No record found.</div>
       )}
-
+       <p className="text-center">Total Records: {totalItems}</p>
       <div>
         <PaginationControl
           page={page}

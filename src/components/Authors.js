@@ -34,6 +34,7 @@ const Authors = () => {
   const searchAuthors = async (keyword, page) => {
     const response = await AuthorService.getAuthorsList(keyword, page, perPage);
     const { totalAuthors, currentPage, totalPages, authors } = response.data;
+    console.log(response.data)
     setAuthors(authors);
     setCurrentPage(currentPage);
     setTotalPages(totalPages);
